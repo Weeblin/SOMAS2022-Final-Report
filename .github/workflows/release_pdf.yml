@@ -1,0 +1,28 @@
+name: Build & release PDF
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build PDF
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set name for PDF
+        uses: actions/set-env@v1
+        with:
+          variable: PDF_NAME
+          value: SOMAS2022-Final-Report
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: main.tex
+      - name: Rename generated PDF
+        run: mv main.pdf ${{ env.PDF_NAME }}.pdf
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ env.PDF_NAME }}.pdf
