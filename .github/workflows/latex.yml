@@ -1,10 +1,8 @@
 name: Build LaTeX Document
 on:
   push:
-    branches:
-      - master
-    tags: []
-  pull_request:
+    branches: ["**"]
+  workflow_dispatch:
 
 jobs:
   build:
