@@ -1,0 +1,91 @@
+\section{Game Design}\label{sec: game design}
+
+% Introduction to the game design section 
+
+
+
+
+\subsection{Objectives}\label{sec: objectives}
+
+% What do we want our game to represent
+% What do we want to achieve 
+
+\subsection{Ideologies}\label{sec: ideologies}
+
+% What is our overall ideologies behind our design decisions
+% scalability
+
+\subsection{Game Facets}\label{sec: game facets}
+
+% short introduction those this sub section 
+
+\subsubsection{Communication \& Discussion}\label{sec: comms}
+
+% Basis of a Social Network 
+% Disstribution of Knowledge and Opinions
+% Message Types and structures
+
+\subsubsection{Governance}\label{sec: gov}
+
+% Institutionalised Power
+% Ostrom Institution Theory
+% Alternate Disspute Resolution
+% Computational Justice 
+% Sanctions for dissobedience 
+% Forgiveness
+
+\subsubsection{Fight Decisions}\label{sec: fight decision}
+
+% Collective Risk Analysis
+% Collective Action
+% Social Contracts 
+% Dissobedience 
+
+\subsubsection{Common Resource Allocation}\label{sec: cmr}
+
+% Mechanism introudction 
+% Dispute Resolution via Utility or Chair's ideology of fairness 
+
+\subsubsection{Peer-To-Peer Trading}\label{sec: trading}
+
+% Individual analysis
+% Social Capital 
+% Fairness
+% Clique Formation 
+
+\subsubsection{Utility \& Defining A Winner}\label{sec: winner}
+
+% Relative average contribution w.r.t a number of facets
+% ideology surrounding a `winner' of a fight
+% ethics surronunding selfishness and sacrifice 
+
+
+\subsubsection{Agent Consideration \& Possible Behaviour}\label{sec: behaviour}
+
+% possible behaviour
+% possible traits to consider
+% i.e social capital, contribution, effectivness, dissobedience
+% Personal utility 
+
+\subsection{Mathematics}\label{sec: maths}
+
+
+\subsubsection{Initial Variables}\label{sec: initial variable}
+
+% Agents starting attributes and infra strating values
+
+\subsubsection{Modifiers}\label{sec: modifiers}
+
+% hit points and range modifiers
+% non-detminism introduction 
+
+\subsubsection{Enemy Variables}\label{sec: enemy}
+
+% equation representation and the reasons for this 
+% i.e. Monster resiliance is base on HP and ST the caluclate the minimum monster resilience ove the whole game for a winnable situtation whilst also making the game difficulty invarient over starting parameters. 
+
+\subsubsection{Loot Variables} \label{sec: loot}
+
+% Introduction to Loot
+% Quantity Equation Definitions
+% Quality Equation Definitions 
