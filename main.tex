@@ -34,6 +34,76 @@
 \usepackage{listings-golang}
 \usepackage{adjustbox}
 \usepackage{multicol}
+\usepackage{glossaries}
+
+\makeglossaries
+
+\newglossaryentry{chair}
+{
+        name=Chair,
+        description={Elected leader of the agents}
+}
+\newglossaryentry{manifesto}
+{
+        name=Manifesto,
+        description={Conditions with which agents run for election as Chair}
+}
+\newglossaryentry{fight proposal}
+{
+        name=Fight Proposal,
+        description={A list of thresholds to determine an agents fight decision}
+}
+\newglossaryentry{loot}
+{
+        name=Loot,
+        description={Equipment dropped by defeated enemies, including swords, shields, health potions and stamina potions}
+}
+\newglossaryentry{potions}
+{
+        name=Potions,
+        description={Drank by agents to restore health points or stamina points}
+}
+\newglossaryentry{bonus attack}
+{
+        name=Bonus Attack,
+        description={Value of a sword equiped by an agent}
+}
+\newglossaryentry{bonus defense}
+{
+        name=Bonus Defense,
+        description={Value of a shield equiped by an agent}
+}
+\newglossaryentry{common pool resource}
+{
+        name=Common Pool Resource,
+        description={Loot dropped my enemy to be distributed amoungst agents}
+}
+\newglossaryentry{institutionalised power}
+{
+        name=Institutionalised Power,
+        description={the power wielded by the Chair to control agents and direct their behavior through the use of rewards and punishments}
+}
+\newglossaryentry{sanctions}
+{
+        name=Sanctions,
+        description={Methods by which the Chair punishes disobedience}
+}
+\newglossaryentry{alternative dispute resolution}
+{
+        name=Alternative Dispute Resolution,
+        description={Settling disputes outside of formal proceedings with the assistance of an impartial dispute resolution body}
+}
+\newglossaryentry{social capital}
+{
+        name=Social Capital,
+        description={Social value calculated by an agent and assigned to another}
+}
+\newglossaryentry{utility}
+{
+        name=Utility,
+        description={Value of worth to the community or self, defined by an agent and assigned to another}
+}
+
 
 \lstset{
   language=golang,
@@ -131,6 +201,59 @@ Co-operative survival games refer to a subset of political choice games wherein 
 
 \newpage
 \tableofcontents
+\newpage
+\listoffigures
+\newpage
+\listoftables
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                 Glossary & List of Symbols                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{List Of Symbols}
+
+\begin{description}
+
+\item[\parbox{1.25 in}{$\delta$}] Range Modifier
+\item[\parbox{1.25 in}{$\gamma$}] Hit Point Modifier 
+\item[\parbox{1.25 in}{$\sigma$}] Linear Modifier
+\item[\parbox{1.25 in}{$X$}] Enemy Resilience 
+\item[\parbox{1.25 in}{$Y$}] Enemy Damage
+\item[\parbox{1.25 in}{$HP$}] Health Points
+\item[\parbox{1.25 in}{$ST$}] Stamina Points
+\item[\parbox{1.25 in}{$c$}] Current Level
+\item[\parbox{1.25 in}{$L$}] Total Number Of Levels
+\item[\parbox{1.25 in}{$N$}] Number Of Agents  
+\item[\parbox{1.25 in}{$\mu$}] Threshold Percentage 
+\item[\parbox{1.25 in}{$M$}] Number Of Agents Required To Win game
+\item[\parbox{1.25 in}{$N_f$}] Number Of Fighting Agents 
+\item[\parbox{1.25 in}{$N_c$}] Number Of Cowering Agents 
+\item[\parbox{1.25 in}{$HP_{pool}$}] Health pool
+\item[\parbox{1.25 in}{$ST_{cower}$}] Cower Stamina Regeneration
+\item[\parbox{1.25 in}{$HP_{cower}$}] Cower Health Regeneration   
+\item[\parbox{1.25 in}{$A_s$}] Attack Base 
+\item[\parbox{1.25 in}{$A_b$}] Attack Bonus
+\item[\parbox{1.25 in}{$A$}] Attack Total  
+\item[\parbox{1.25 in}{$D_s$}] Defense Base   
+\item[\parbox{1.25 in}{$D_b$}] Defense Bonus
+\item[\parbox{1.25 in}{$D$}] Defense Total
+\item[\parbox{1.25 in}{$P_hp$}] Health Potion Value
+\item[\parbox{1.25 in}{$P_st$}] Stealth Potion Value 
+\item[\parbox{1.25 in}{$P$}] Potion Drop Quantity Percentage
+\item[\parbox{1.25 in}{$E$}] Weapon Drop Quantity Percentage
+\item[\parbox{1.25 in}{$N_p$}] Number Of Potions Dropped
+\item[\parbox{1.25 in}{$N_e$}] Number Of Weapons Dropped
+\item[\parbox{1.25 in}{$N_hp$}] Number Of Health Potions Dropped
+\item[\parbox{1.25 in}{$N_st$}] Number Of Stamina Potions Dropped
+\item[\parbox{1.25 in}{$N_a$}] Number Of Swords Dropped
+\item[\parbox{1.25 in}{$N_d$}] Number Of Shields Dropped
+
+
+\end{description}
+
+\newpage
+\printglossary
 \newpage
 
 \pagenumbering{arabic}
