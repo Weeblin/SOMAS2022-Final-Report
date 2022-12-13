@@ -1,0 +1,96 @@
+\chapter{DevOps Project Management}\label{DevOps}
+
+\section{Project Organization}
+
+As part of a Multi-Agent System ourselves, we needed to establish some formal organization and communication channels that were of utmost importance for the progress of the project.
+
+\subsection{Communication}
+
+Our main source of organization was through in-person and online meetings, both General and Team-Based ones.
+
+Apart from having weekly (in-person) meetings, we decided to use \texttt{Slack} as the main channel for global and intra-team communications.
+Each sub-team had a separate channel to communicate, discuss and share ideas that could be brought up for discussion on the general meetings we had so that a final decision was made.
+
+As far as dispute resolution is concerned, in most cases we went with majority voting upon the ideas that were up for discussion. In some other occasions (such as General Rules and Conventions) we went with general consensus: ideas where brought up and if no one objected, those were added to the list of rules/conventions we needed to follow.
+
+\subsection{Documentation}
+
+Each sub-team was responsible for keeping up-to-date documentation of what has been implemented/agreed upon as a reference for everyone on the project (e.g., Overview Documentation, Maths Documentation, Infrastructure MVP and Quick Start Documentation)
+
+\subsection{Rules \& Conventions}
+
+In order for us to effectively work in parallel towards accomplishing our common goal (i.e., develop a platform where agent strategies could be formed as to escape the pit) we had to agree and decide upon some General Rules and Conventions.
+Those included General Project Management Rules, Coding and Reporting Conventions both of which are publicly available on the main page of our projects' repository.
+
+\subsection{Programming Language}
+
+Upon voting the majority agreed to use the programming language of Go. That decision was heavily influenced by Go's ability to implement concurrency which was a desired feature for the Peer-2-Peer communication level between the agents. Some other important factors were previous years' implementations and package managing implemented within Go (with go.mod).
+
+\newpage
+
+\section{Project Management}
+
+One of the most crucial parts in any Software Engineering Project is effectively tracking changes on files. As a solution to that we have utilised Git as a Version Control System and GitHub as the online counterpart.
+
+\subsection{GitHub}
+
+The code repository can be found on: \url{https://github.com/SOMAS2022/SOMAS2022}
+
+We have created 2 repositories: One for hosting the code of our Environment and Agents' implementations and one for the Final Report of the Project.
+
+On those repositories, each team (either sub-teams or agent teams) should create a separate branch for a specific feature and work on it. After the implementation was done they would have to create a Pull Request to merge the changes to the main branch. We have agreed to use branch protection on the main branch and each merge was only possible after it has been reviewed by at least another member that was not involved in the implementation of that specific feature, to ensure code integrity and readability.
+
+\subsection{Project Progress}
+
+In order to track Project Progress and Task Allocation we have used GitHubs' Issues feature. 
+Through that functionality we were able to Create and List Tasks that needed to be done by hierarchically ordering them according to importance and team-specific labels.
+Moreover, through the assignment of Milestones we were able to monitor deadlines and keep delegation of work on time.
+Last but not least, members of the Infrastructure Team could self-assign to a single (or multiple) issue which helped improve the efficiency and transparency for each task.
+
+\newpage
+
+\section{DevOps}
+
+The foundational idea behind the DevOps Team was to make the implementation process easily accessible to everyone while ensuring that the "quality" and integrity of code created at any step was not violated. That was accomplished through various Continuous Integration - Continuous Deployment (CI-CD) methods:
+
+\subsection{GitHub Actions}
+
+% Linting 
+% Deadlock
+% Cyclic refference
+% Report Copmilation on report repo
+
+\subsection{(Unit) Testing}
+
+% Math equation check
+% Basic Agent Functionalities
+
+\subsection{Scripts/Deployment}
+
+% Docker container
+% Makefile
+
+
+\newpage
+
+\section{Project Structure}
+
+Following common coding practises in Go and project structures from previous years as our main inspiration, we came up with the following structure \ref{}:
+
+\begin{lstlisting}[label='Project Structure']
+.
+├── cmd
+|    └── (Executable Outputs)
+├── docs
+|    └── (Documentation Files)
+├── web
+|    └── (Frontend/Backend Implementation)
+├── pkg
+|    └── infra
+|        └── (Infrastructure Implementation)
+|        └── teams
+|             └── (Individual Team Agents/Experiments)
+├── .env (Environmental variables for Infrastructure)
+└── scripts
+     └── (Automation/Execution scripts)
+\end{lstlisting}
