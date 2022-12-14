@@ -72,6 +72,12 @@ SHERWIN here you need to talk about:
 
 \subsection{Trustworthiness}
 
+In their 2007 paper Ostrom and Ahn give multiple examples of trustworthiness, but give no concise definition. One definition fitting the examples of Ostrom and Ahn is that given by Pitt in his 2021 book on Self-Organising Multi-Agent Systems: "Trustworthiness, as distinct from trust, and related to reputation, being a shared understanding of someone’s willingness to honour agreements and commitments"\cite{pitt}. In their paper, Ostrom and Ahn treat trustworthiness as a function of an individuals observable characteristics such as appearance, dress, gender, age and language. Moreover, they give examples of so called "one-shot" situations in which an individual has to decide on whether to trust another individual which they have never previously interacted with.\cite{ostrom-ahn}
+
+Given that agents' interactions in the Escaping the Dark Pit(t) game are not one-shot, but repeated, handling trustworthiness as an inherent property of an agent's current observable characteristic is not ideal. Instead, as agents interact many times, it is more natural to use previous interactions to estimate future cooperativeness. Our agent therefore does not use observable characteristics to determine trustworthiness, as Ostrom and Ahn did. Instead, we define an agent's trustworthiness in the following way: "Trustworthiness is an agents tendency to cooperate with and trust other agents as evidenced by their past actions."
+
+Each agent updates the $Trustworthiness$ social capital value of other agents at the end of the round in the following way: The agent takes in the other agent's current state and passes it through its Q-functions. From the Q-functions then give the potential social welfare of each of the agent's possible actions. Depending on their utility to the group, each action is placed on a scale from -1 to 1. Where the value of 1 is given to the most beneficial action and -1 is given to the least beneficial action. Actions which are neither the best nor the worst are assigned a value by interpolating between -1 and 1 based on the social welfare of the action. With every action assigned a cooperativeness value between -1 and 1, the agent now reads in the selected action of the other agent. 
+
 \subsection{Honour}
 \label{subsection:honour}
 
