@@ -23,7 +23,7 @@ For the purposes of this project, disobedience and divergence from any socially 
 % outline of the report 
 This report will present the definition of the game, design considerations that took place and the main objectives. The breakdown of the teams that were created, their members, responsibilities and work flows will be detailed before presenting the implementations required to complete our objectives. Next the game design, DevOps and infrastructure work will be introduced to provide a thorough understanding of the game and its dynamics before agent teams present their strategies, algorithms and implementations. Experimental design results will proceed a discussion on the implications of these results with respect to self-organising multi-agent systems. Finally there will be a conclusion and recommendations for future work. 
 
-\subsection{Story Line}\label{sec:story line}
+\section{Story Line}\label{sec:story line}
 
 % story line
 For the implemented game, the following story-line was created: A rag-tag group of rebel peasants find themselves at the bottom of a deep and dark pit. To escape to freedom, the peasants must battle through each rising level of the pit, slaying a number of perilous beasts on their way. With each enemy slayed at the blood soaked hands of the proletarian, they gain access to new and improved weaponry to fight on and never surrender. Once free, the peasants can continue their struggle against the totalitarian dictatorships of the western world, until, in God's good time, the New World, with all its power and might, steps forth to the rescue and the liberation of the old. \cite{churchill} 
@@ -31,7 +31,7 @@ For the implemented game, the following story-line was created: A rag-tag group 
 To achieve all these goals, peasants must self-organise to survive. This can be done by electing governors, conducting collective risk analysis, assigning common pool resources and performing alternative dispute resolution using institutionalised power. All of these aspects, revolve around the understanding of social choice theory and knowledge aggregation. 
 
 
-\subsection{Rules, Attributes \& Artifacts}\label{sec:rules}
+\section{Rules, Attributes \& Artifacts}\label{sec:rules}
 
 The objective of the game is for an Agent to win, individually, by escaping the pit with as many `hit-points' and `health points' as possible, whilst also ensuring that enough of your fellow players survive to start the revolution upon escape. 
 For each level within the pit, combat consists of a number of fight rounds which continue until either; the enemy is defeated, or the agents turned into chutney. Within each round, Agents can either; attack, defend, or cower. The first action deals damage to the enemy, the second absorbs damage from the enemy, and the final option skips the round whilst regenerating health and stamina.
@@ -39,7 +39,7 @@ Agents will be granted multiple opportunities within fight rounds and pit levels
 
 Before listing the rules of the games, it is important to give a simple overview of the Agent and enemy attributes as well as the equipment that can be used within the game.  
 
-\subsubsection{Attributes \& Equipment}
+\subsection{Attributes \& Equipment}
 
 All Agents within the game have the following attributes:
 
@@ -75,7 +75,7 @@ Swords are used by Agents who attack, and shields are used by Agents who defend.
 
 The value mechanisms for all these variables will be outlined in Section \ref{sec: maths}. 
 
-\subsubsection{Rules}
+\subsection{Rules}
 Now that the basic game variables have been defined, the standard rules of the game can be listed. 
 
 \begin{enumerate}
@@ -111,7 +111,7 @@ Fight decision strategies are proposed for the whole group and chosen once a maj
 
 % more nuanced rules and the reasons for these rules 
 
-\subsection{Aims \& Objectives}\label{sec:aims}
+\section{Aims \& Objectives}\label{sec:aims}
 
 The overarching objective of this project was to test the self-organisational skills of independent agents when placed into a survival, multi-agent environment. We desired to examine the creation and degradation of relationships between agents based on differing ideologies and whether those relationships are based on facets such as; trust, expertise, community contribution or social capital. Another aim was to explore the different types of governments that would be formed by these agents to determine which governance strategy produced the best results, and which caused the most unrest. Further exploration of the range and severity of sanctions placed upon disobedient agents within an unhappy community would complement the evaluation of a Chairs effectiveness to rule. Finally, we attempted to witness the effect of scaling the number of agents within the game on the groups ability to escape the pit and do so as a community. 
 
@@ -129,13 +129,13 @@ As a final objective, we wanted to develop a metric capable of quantifying an ag
 % finally to attempt to indentify a winner of the game. The definition of the `winner' will be explored in Section.GAMEDESIGN. 
 
 
-\subsection{Team Structure}\label{sec:team struct}
+\section{Team Structure}\label{sec:team struct}
 
 To accomplish the goals that have been defined in the previous sub-section, we self-organised into 6 `Agent Teams'. Each team is responsible for implementing their own agent, with their own ideologies and intuitions of how social interactions, coupled with knowledge aggregation, can be utilised to obtain high levels of game proficiency. They will also be in charge of documenting their progress and ultimately writing a report detailing their implementation strategy and experimental design results. Finally, teams must provide code reviews for other teams to maintain consistency of standards and practices. The agent teams, and their members, are defined in Figure \ref{fig:agentteams}. Team leaders impose some hierarchy, and will represent the teams opinions on group decisions as well as updating people on their progress. Overall group decisions will then be decided via consensus of the team leaders. 
 
 \begin{figure}[htb]
     \centering
-    \includegraphics[scale=0.55]{subteams.png}
+    \includegraphics[scale=0.55]{000_introduction/images/subteams.png}
     \caption{Breakdown of the agent teams, their team leaders and members}
     \label{fig:agentteams}
 \end{figure}
@@ -172,7 +172,7 @@ Each one of these sub-teams were created by agent teams donating 1-2 of their me
 
 \begin{figure}[htb]
     \centering
-    \includegraphics[scale=0.6]{agentteams.png}
+    \includegraphics[scale=0.6]{000_introduction/images/agentteams.png}
     \caption{Breakdown of the sub-teams, their team leaders and members}
     \label{fig:subteams}
 \end{figure}
