@@ -17,6 +17,8 @@ In addition to these components which are inherent to the agent, the current sta
 
 After each round of the game, the agents will update their internal state. Specifically, the agents will update their selfishness based on the current environment and the social capital of agents, while the social capital will be updated based on the actions of agents. The social capital is also updated every time an agent receives a message from an agent in their network. All of these update mechanisms are indicated by red arrows in Figure \ref{fig:agent_structure}. As can be seen, there is no arrow feeding back to the Q-functions as they do not update over the course of a single game. Instead, the Q-functions are updated based on the results from a series of games. However, as will be discussed later, the updating of selfishness values does still permit the agents to learn from experiences during a game.
 
+In addition to selfishness and social capital the agent also maintains a set of state variables that are used to make decisions with regard to leadership and voting. The most important of these is a measure of how well each agent in currently doing. This variable has to take into account many different aspects of game state and can be fairly difficult to create as defining a good game position is not obvious and of course depends on the decisions of others. An example of this difficulty is in deciding whether or not an agent having a higher attack value suggests it is doing better, in this case we found this to be a bad thing as in makes the agent more likely to have to engage in fights compared to agents with lower attacks. Several different factors such as this were combined to form this single variable which will be referred to as agent survival likelihood from here on. Once this score was computed for each agent all the scores were scaled such that the maximum score was less than 1 and the minimum was greater that 0, in addition, the mean was shifted so as to be close to 0.5. Finally, the standard deviation of this data-set was computed to give an indication of the spread of agents states, as the variation in state across the population can be a big factor in agent decision making. 
+
 \begin{figure}[!h]
     \centering
     \includegraphics[width=0.75\linewidth]{004_team_1_agent_design/images/agent_structure.png}
@@ -81,6 +83,29 @@ Each agent updates the $Trustworthiness$ social capital value of other agents at
 \subsection{Honour}
 \label{subsection:honour}
 
+\section{Social Bias}
+
+If the aim of the entire game from the point of view of each agent was to get as many agents total to escape the pit without regard for whether they themselves make it out all agents would simply implement whatever the optimum strategy is to maximise total agent survival, (although this strategy can be relatively difficult to find). However, since every agent also wants to ensure it is one of the surviving agents the game becomes a  competition to ensure a place amongst this surviving group. This concept introduces the idea of punishing agents with bad social capital, resulting in agents attempting to see how much selfish behaviour they can get away with before the negative social consequences out way the potential gain. Thus in order to incorporate this logic into our agents decision making it is important to not only maintain a score of social capital of other agents but also an estimation of what the collectives groups opinion is of our agent. This value can be fed into our decision making to adjust the selfishness and cooperation of our agent if it finds that the group has a bias against it. 
+
+In order to measure the social bias against our agent at each round we try and estimate whether or not we are being punished. What constitutes a punishment can again be very difficult to define as this requires knowledge of what a good game position is, which in turn requires knowledge of the optimum strategy. To simplify this problem our agent assumes that being made to fight is generally a bad thing as this can lead to loss of health, therefore, we need to try and keep track of whether or not our agent is made to fight more often than it should. The algorithm devised for this makes use of the survival likelihood scores mentioned earlier to find a set of agents in a similar position to our own agent, using the standard deviation of this score to adjust the threshold of similarity. Once the set of agents similar to our own has been found we can then find the fraction of this set of agents that were made to fight and also the boolean value of whether our agent is made to fight. What we are trying to measure using these two variables is whether there is a statistical difference in our fight frequency compared to what we would expect it to be. 
+An exponential weighted moving average is formed in order to accomplish this with the following algorithm showing how this average is updated at each round. 
+
+\begin{align*}
+\text{If agent is made to fight:} \\
+biasAverage \leftarrow (1-e)*biasAverage + e*(1-ratioMadeToFight) \\
+\text{Else} \\
+biasAverage \leftarrow (1-e)*biasAverage - e*(ratioMadeToFight)
+\end{align*}
+% \begin{algorithmic}
+% \If{$madeToFight$} \\ 
+%     \State $biasAverage \gets (1-e)*biasAverage + e*(1-ratioMadeToFight)$ \\
+% \Else \\
+%     \State  $biasAverage \gets (1-e)*biasAverage - e*(ratioMadeToFight)$ \\
+% \EndIf 
+% \end{algorithmic}
+
+As can be seen the bias is shifted up or down slightly dependent on whether the agent is made to fight. In order to check that this algorithm was reliable it was tested in python to see how much bias was needed over how many rounds to be detected using this method. In each round of the testing the $ratioMadeToFight$ variable was randomly generated and then multiplied by a constant which was used as the probability that the agent was made to fight. We found that using an $e$ value of $0.1$ over 20 rounds the algorithm correctly predicted that there was a positive bias for a bias multiplier of $1.1$ roughly $80\%$ of the time. Similar results were found for a multiplier of $0.9$. The benefit of this algorithm is that it only requires us to store a single variable. This resultant $biasAverage$ score is positive when there is bad social bias against us and negative when there is favourable social bias.
+
 \section{Forgiveness}
 
 \section{Selfishness}
@@ -99,6 +124,23 @@ Weighting of how much agent prioritises its own performance over the performance
 \subsection{Exclusion from Trading}
 
 \subsection{Elections}
+
+Since our agent deign is based on a society using Ostrom style rules it is important to have a mechanism to punish agents that aren't following these rules and acting against the interests of the group. Since the manner in which the rules are implemented does not having any inbuilt sanction system we use the system available of electing a leader as the mechanism though which to impose punishment. When the collective group is generally following the rules our strategy prefers that there is no absolute leader and instead the against vote on rules that should be followed, however, if there we are measuring a great enough amount of negative social capital in the group our agent tries to elect a leader with absolute power in the hope that they will punish the agents working against the groups interests. We can use the social capital scores to decide which agent we most trust to impose this will. 
+
+A problem introduced by this strategy is that when a leader is elected it is expected that they will act against the interests of a a subset of the agents by punishing them. This punishment may also mean that the fight decisions the leader makes may not seem entirely rational from the objective point of view of killing the current monster as fast as possible. These two factors can result in the leader not being liked by a large percentage of the current agents suggesting that being the leader that imposes these sanctions is often not beneficial to an agents long term survival chances. 
+
+The result of this problem is that each agent needs to weigh the negative outcome of no agent taking this responsibility against the cost of being the one to make the decision. It is fairly simple to see that if our agent was the only type of agent in the game, such that every agent in the game had the same strategy, it would be impossible for any one agent to gain the advantage here. So to prevent being stuck in a sub-optimal Nash Equilibrium the system would be devised such that a random agent was chosen each time. However, since the game contains agents from other teams with alternative strategies it may be possible to implement a strategy here that is better than those implemented by other agents. Once again the decision making process our agent is based on finding the number of agents in a similar position to ours and the spread of agents states. We can use this information as well as the social capital of every agent to construct the following manifesto proposal system shown in figure~\ref{team1_manifesto_decision}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.75\linewidth]{004_team_1_agent_design/images/mainfestostrategy.png}
+    \caption{Manifesto proposal algorithm}
+    \label{fig:team1_manifesto_decision}
+\end{figure}
+
+Each of the decision making steps in the algorithm can be fairly difficult to estimate. We find the potential social reward of enforcing the policy based on how bad the mean current social capital is as well as the spread of agents state. This is because if we have positive social capital for most people then we wont have to introduce many sanctions and thus won't be disliked. Also if the spread of agent states is greater it was found that it can be harder to treat all agents fairly. 
+
+When taking an average of the social the total social capital the mechanism used for taking this average is very important. If we use a general $l_n$ norm the higher the value of $n$ the greater the affect of outliers will be on the computed mean, which may be preferable dependent on our strategy. The $l2$ norm was chosen for our agent but it can be hard to reason what a good choice here should be and so tuning was used to adjust this value. This average is used to decide whether or not to try and vote for a leader.
 
 \section{Q-learning}
 
