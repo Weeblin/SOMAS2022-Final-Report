@@ -1,0 +1,272 @@
+% collective action: a situation were it is denificial for agents to cooperate, inspite of their individual apirations. (ober 2008) common pool resource management, where each agent acts to maximise their own self interests, however, if all do this, the resource is depleated which defeats the long term goal of the gorup. lack of pro social behaviour acknowledgement and anti-social behaviour depleting resources. obedience and positive contribution is not directly percieved, but cost of defection is only fealt by those who will play in the long term. 
+
+% computational justice: is the allocation fair? (what is meant by fair) 
+
+% norm governed systems must deal with error, or defectors. 
+
+% institutionlised power: agents empowered agents who can perform designated actions. agents in positions of power can identify and sanction defectors. 
+
+% social choice theory: agregation of individual decisions or preferences to produce a single group decision.
+
+% alternative dispute resolution: the resolution of any dispute between two or more entities that is resolved without the neeed for litigation. 
+
+\section{Game Design}\label{sec: game design}
+
+% Introduction to the game design section 
+
+
+
+
+\subsection{Ideologies}\label{sec: ideologies}
+
+% What is our overall ideologies behind our design decisions
+% introduce the following concepts
+% social choice theory, collective action
+% institutionalised power, norm governance and ADR. 
+% computational justice 
+% scalability
+
+\subsection{Game Facets}\label{sec: game facets}
+
+% short introduction those this sub section 
+
+\subsubsection{Communication \& Discussion}\label{sec: comms}
+
+% Basis of a Social Network 
+% Disstribution of Knowledge and Opinions
+% knowledge aggregation
+% Message Types and structures
+
+\subsubsection{Governance}\label{sec: gov}
+
+% Institutionalised Power
+% Ostrom Institution Theory
+% Alternate Disspute Resolution
+% Computational Justice 
+% Sanctions for dissobedience 
+% Forgiveness
+
+\subsubsection{Fight Decisions}\label{sec: fight decision}
+
+% Collective Risk Analysis
+% Collective Action
+% Social Contracts 
+% Dissobedience 
+
+\subsubsection{Common Resource Allocation}\label{sec: cmr}
+
+% Mechanism introudction 
+% Dispute Resolution via Utility or Chair's ideology of fairness 
+
+\subsubsection{Peer-To-Peer Trading}\label{sec: trading}
+
+% Individual analysis
+% Social Capital 
+% Fairness
+% Clique Formation 
+
+\subsubsection{Utility \& Defining A Winner}\label{sec: winner}
+
+% Relative average contribution w.r.t a number of facets
+% ideology surrounding a `winner' of a fight
+% ethics surronunding selfishness and sacrifice 
+
+
+\subsubsection{Agent Consideration \& Possible Behaviour}\label{sec: behaviour}
+
+% possible behaviour
+% possible traits to consider
+% i.e social capital, contribution, effectivness, dissobedience
+% Personal utility 
+
+\subsection{Game Flow}\label{sec:game flow}
+
+
+\subsection{Mathematics}\label{sec: maths}
+
+In this sub-section, the variables of the game are defined using dynamic algorithms and initial instantiations. All equations are designed so that the difficulty of the game is invarient to initial conditions. This way, only the self-organisational abilities of different numbers of agents determines the effectiness of the strategy. 
+
+For increasingly difficult game play, the enemy attributes were designed to be of increasing in value, linearly, over the duration of the game. To introduce non-determinism, each calculation should be randomly scaled within a pre-determined range, and each use of an attack weapon only deal a percetnage range of it maximum potential. The frequency of equipment dropped by defeated enemies was designed to force an economy of scarcity, where in not all agents can be satisfied by the allocation of the common resource pool (loot). With regards to individual pieces of loot, values are directly proportional to the strength of the enemy defeated. Therefore, as the game gets increasingly more difficult, the equipment available to the agents becomes increaseingly more powerful.  
+
+Finally, the metric used for calcualting the utility of an agent with respect to the group will be introduced as an indicator of the winner of the game. Each agent will be scored based on their relative contribution compared with the average over the course of the game. 
+
+\subsubsection{Initial Variables}\label{sec: initial variable}
+
+For decent game play with a single agent from each team (i.e. 6 agents), and assuming that integer values of all variables are preferable for readability for logging, the stating values are assigned as below. 
+
+\begin{itemize}
+    \item Health Points - $HP = 1000$
+    \item Stamina - $ST = 2000$
+    \item Number of Agents - $N = 100$
+    \item Number of Levels - $L = 60$
+    \item Threshold Percentage - $\mu = 0.6$
+\end{itemize}
+
+Here the Threshold Percentage, is the percentage of agents ($N$) required to be alive at the end of the game to win, as shown in Equation \ref{eq:M}. All of these starting variables can be adjusted, and will dynamically scale the other variables within the game to ensure consistency of difficulty. 
+
+\begin{equation}\label{eq:M}
+    M = ceil(\mu N)
+\end{equation}
+
+There are some variables within the game that are dependent on `$HP_{start}$'. This variable represents the starting value, not the current value. For this reason, $HP/ST/N/L$ initial values should be globally defined. The $ceil()$ function is to ensure integer values. It can be implemented in whatever way is best. To satisfy rule 9, the following two equations define the amount of health/stamina that the action of cowering regenerates.  
+% Agents starting attributes and infra strating values 
+
+\begin{equation}
+    HP_c = 0.01*HP_{start}
+\end{equation}
+
+\begin{equation}
+    ST_c = 0.01*HP_{start}
+\end{equation}
+
+
+\subsubsection{Modifiers}\label{sec: modifiers}
+
+% hit points and range modifiers
+% non-detminism introduction 
+
+For the introduction of non-determinism, two modifiers were created. The first, $\delta$, is a range modifier that ensures each calculated value falls within a plus-minus range. This range was determined to be $20\%$, so the range modifier has the bounds, $0.8 \leq \delta \leq 1.2 $, and is shown in Equation \ref{eq:delta}. This modifier will be used in all the equations throughout the game. 
+
+\begin{equation}\label{eq:delta}
+    \delta = random(0.8,1.2)
+\end{equation}
+
+The second is the hit-point modifier, $\gamma$. This ensures that any damage dealt during an attack action, by either the enemy or an agent, only deals a percentage of it's maximum hit potential. $\gamma$ has the bounds, $0.5 \leq \lambda \leq 1$ and can be seen in Equation \ref{eq:gamma}. 
+
+\begin{equation}
+    \gamma = random(0.5,1)
+\end{equation}
+
+
+\subsubsection{Enemy Variables}\label{sec: enemy}
+
+% equation representation and the reasons for this 
+% i.e. Monster resiliance is base on HP and ST the caluclate the minimum monster resilience ove the whole game for a winnable situtation whilst also making the game difficulty invarient over starting parameters. 
+
+Enemy variables are designed to create the same difficulty regardless of the starting values to assess the effectiveness of the self-organisation of different numbers of agents. The first enemy attribute is the resiliance ($X$), and is shown in Equation \ref{eq:X}. This was deisgned to be a ratio of total amount of combined damage that all the agents are capable of, based on their starting stamina value, and the number of levels in the game. This ensures that, overall, the game is just winnable and easily loosable given high thresholds of surviving agents and/or poor self-organisation. 
+
+\begin{equation}\label{eq:X}
+    X = ceil \left( \delta \frac{N(ST)}{L} \sigma \right)
+\end{equation}
+
+Where $\sigma$ is the linear scaling variable defined as:
+
+\begin{equation}
+    \sigma = \frac{2c}{L} + 0.5
+\end{equation}
+
+with $c$ representing the current level of the pit. $\sigma$ is used to linearly scale the monster's resilience as the players traverse the levels of the pit. Changing this equation (i.e. to an exponential form) will change the distribution with which the monsters get stronger, around the average resilience. Increasing the difficulty of the game is easily done by modifying $\sigma$.
+
+The second, and final, enemy attribute is the monster's damage rating ($Y$), and can be seen in Equation \ref{eq:Y}. It was design with similar logic to the enemy's resilience. That is, the ratio of the total potential health and shield points of all the agents against the number of levels is considered, ensuring that the enemy can deal enough damage to kill the required number of agents so that the group fails its obective. To ensure this, the ratio is scaled by 1 minus the threshold percentage.  
+
+\begin{equation}\label{eq:Y}
+    Y = ceil \left(\delta \frac{N(HP)+N(ST)}{L} \sigma \left(1-\frac{M}{N} \right) \right)
+\end{equation}
+
+Where $\delta$ and $\sigma$ the same as for $X$. As outlined eariler in this section, each time the monster attacks, its hit points are a percentage of its total potential $Y$. Therefore, the instantaneous values of $Y$ becomes:
+
+\begin{equation}
+    Y_{hit points} = \gamma Y 
+\end{equation}
+
+
+\subsubsection{Loot Variables} \label{sec: loot}
+
+% Introduction to Loot
+% Quantity Equation Definitions
+% Quality Equation Definitions 
+As a quick reminder, every time a monster is defeated, it drops a number of equipment (weapons/shields) and a number of potions (health/stamina), these represent the `loot' or common pool. As outlined in Section \ref{sec:introduction}, every agent has a base value and a bonus value of attack and defence. Each agent starts with a base Attack ($D_s$), and Defense ($S_s$) with the values $0.005*ST$. The base value represents an agents minimum potential.
+Bonus Attack ($A_b$) and Bonus Defence ($D_b$) is dictated by the equipment currently being wielded. Within each fight round, each agent who chooses to fight, deals a percentage of either $D_b$ or $A_b$, depending on their chosen fight action. This is defined as the $\gamma$ modifier outlined in Section \ref{sec: modifiers}. After use, the resulting hit-value is subtracted from the agents stamina ($ST$), meaning that an agent's stamina degrades with every use of equipment. For Potions, the value of any given potion, when consumed, is added to the agents $HP$ (for health potions) or $ST$ (for stamina potions). 
+
+This sub-section will introduce the equations used for calculating both the value of all equipment and the frequency with which these are dropped. 
+
+
+% Each equipment gets dropped by the monster once defeated. 
+% Each agent starts with base case - fists/skin.
+
+\subsubsubsection{Loot Drop Frequency}
+
+New equipment is created at the end of each level, after enemy disposal. The number of equipment/potions dropped per monster is determined by the number of agents that started the game. The range modifier, $\delta$ is used to further add non-determinisium to the loot mechanism. For the number of potions dropped,
+
+\begin{equation}
+    N_p = \delta P N
+\end{equation}
+
+where $0 \leq P \leq 1$ and is predetermined in order to create an economy of scarcity. The number of equipment dropped is,
+
+\begin{equation}
+    N_e = \delta E N
+\end{equation}
+
+where $0 \leq E \leq 1$ and is also predetermined (i.e. $P=0.2$, $E=0.15$). 
+
+% each equipment is created at each new level. 
+% the monster drops:
+% Potions (Np) as a percentage of the number of agents 
+% Equipment (Ne) as a percentage of the number of agents (Np<Ne)
+
+\noindent For both potions and equipment, there are two different pieces to drop. For potions, the number of health potions dropped is,
+
+\begin{equation}
+    P_{hp} = \tau N_p
+\end{equation}
+
+and stamina potions,
+
+\begin{equation}
+    P_{st} = (1-\tau) N_p
+\end{equation}
+
+where $\tau$ is,
+
+\begin{equation}
+    \tau = random(0,1).
+\end{equation}
+
+\noindent The same logic applies of the equipment drop. The number of weapons,
+
+\begin{equation}
+    N_w = \tau N_e
+\end{equation}
+
+and the number of shields,
+
+\begin{equation}
+    N_s = (1 - \tau) N_e. 
+\end{equation}
+
+$\tau$ is re-calculated for equipment so that the split between the two variables is not the same. 
+% within these:
+% Weapons dropped (Nw) is a random percentage of Ne
+% Shields dropped (Ns) is (1-random_number) of Ne
+
+% Health Potions dropped (Php) is a random percentage of Np
+% Stamina Potions dropped (Pst) is (1-random_number) of Np
+
+\subsubsubsection{Loot Values}
+
+For the value of the these potions and equipment, they are dependent on the attributes of the monster that was just defeated. Dropped weapon damage ($D_i$) is a percentage of ($X_i$),
+
+\begin{equation}
+    D_i = ceil\left (\delta \frac{X_i}{4N(0.8)} \right)
+\end{equation}
+
+\noindent Dropped shield protection ($S_i$) is a percentage of ($Y_i$),
+
+\begin{equation}
+    S_i = ceil \left( \delta \frac{Y_i}{N(0.8)}0.5 \right)
+\end{equation}
+
+and the same applies for the potions. Health as,
+
+\begin{equation}
+    P_h = ceil \left( \delta \frac{Y_i}{N(0.8)}5 \right)
+\end{equation}
+
+and stamina,
+
+\begin{equation}
+    P_s = ceil \left( \delta \frac{X_i}{N(0.8)} \right)
+\end{equation}
+
+\noindent The only issue with this, is that the increase of the values over the levels is bounded to the increase of $X$ and $Y$.
