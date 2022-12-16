@@ -17,7 +17,7 @@ In addition to these components which are inherent to the agent, the current sta
 
 After each round of the game, the agents will update their internal state. Specifically, the agents will update their selfishness based on the current environment and the social capital of agents, while the social capital will be updated based on the actions of agents. The social capital is also updated every time an agent receives a message from an agent in their network. All of these update mechanisms are indicated by red arrows in Figure \ref{fig:agent_structure}. As can be seen, there is no arrow feeding back to the Q-functions as they do not update over the course of a single game. Instead, the Q-functions are updated based on the results from a series of games. However, as will be discussed later, the updating of selfishness values does still permit the agents to learn from experiences during a game.
 
-In addition to selfishness and social capital the agent also maintains a set of state variables that are used to make decisions with regard to leadership and voting. The most important of these is a measure of how well each agent in currently doing. This variable has to take into account many different aspects of game state and can be fairly difficult to create as defining a good game position is not obvious and of course depends on the decisions of others. An example of this difficulty is in deciding whether or not an agent having a higher attack value suggests it is doing better, in this case we found this to be a bad thing as in makes the agent more likely to have to engage in fights compared to agents with lower attacks. Several different factors such as this were combined to form this single variable which will be referred to as agent survival likelihood from here on. Once this score was computed for each agent all the scores were scaled such that the maximum score was less than 1 and the minimum was greater that 0, in addition, the mean was shifted so as to be close to 0.5. Finally, the standard deviation of this data-set was computed to give an indication of the spread of agents states, as the variation in state across the population can be a big factor in agent decision making. 
+% In addition to selfishness and social capital the agent also maintains a set of state variables that are used to make decisions with regard to leadership and voting. The most important of these is a measure of how well each agent in currently doing. This variable has to take into account many different aspects of game state and can be fairly difficult to create as defining a good game position is not obvious and of course depends on the decisions of others. An example of this difficulty is in deciding whether or not an agent having a higher attack value suggests it is doing better, in this case we found this to be a bad thing as in makes the agent more likely to have to engage in fights compared to agents with lower attacks. Several different factors such as this were combined to form this single variable which will be referred to as agent survival likelihood from here on. Once this score was computed for each agent all the scores were scaled such that the maximum score was less than 1 and the minimum was greater that 0, in addition, the mean was shifted so as to be close to 0.5. Finally, the standard deviation of this data-set was computed to give an indication of the spread of agents states, as the variation in state across the population can be a big factor in agent decision making. 
 
 \begin{figure}[!h]
     \centering
@@ -61,16 +61,49 @@ Failing to comply with any of these two expectations will lead to an agent being
 In order to increase their $Institutions$ social capital value agents must demonstrate their cooperation within institutions. For our agents there is just a single way of doing this: being elected leader. For as long as an agent is the leader, they will get a temporary boost of +1 to their $Institutions$ social capital value. Originally, agents tendency to sanction defectors was also planned to impact their social capital. In this case, doing actions which punish defectors such as voting against them in elections and not trading with them would yield positive social capital. Inversely, voting for defectors or trading with them would yield negative social capital. However, this was in practice found to be hard to implement, and has been left as a possible future extension.
 
 \subsection{Networks}
+The $Networks$ social capital value is a measure of an agent's reputation among other agents. Specifically, the $Networks$ value tries to estimate the average social capital perception of the given agent among the other agents in the game. The network is also used by agents in order to determine which other agents they want to share social capital information with. This way, agents will form a social networks in which each agent is liked by the other agents in its network.
 
-The $Networks$ social capital value is a measure of an agent's reputation among other agents. Specifically, the $Networks$ value tries to estimate the average social capital perception of the given agent among the other agents in the game. 
+In our current configuration, an agent will communicate with other agents if they have a social capital $Networks$ value greater or equal to $T_{N_0} = 0.5$. Previously, we said that all social capital values are initialised to 0. This is however a slight simplification, as in reality we initialise a small subset of $Networks$ values for each agent to 0.8. This was necessary given the way an agent decides whether to communicate with other agents, as all 0 $Networks$ values would lead to agents never communicating and thus the $Networks$ values never updating. 
 
- !!!!
-SHERWIN here you need to talk about:
-- How an agents $Networks$ value is updated
-- What messages we send between agents
-- When we send messages between agents
-- The connections between agents
- !!!
+We investigated several ways of determining what $Networks$ values to give a non-zero initialization and thus which other agents an agent should communicate with from the beginning.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.4\linewidth]{004_team_1_agent_design/images/sc_network_grid.png}
+    \caption{Grid initialisation of 200 agents}
+    \label{fig:sc_network_grid}
+\end{figure}
+
+The network value of an agent can be initialised at the start of the game. For example, agents can be initialised in a grid structure (figure \ref{fig:sc_network_grid}) where most agents are connected to 4 other agents, aside from agents at the edges or corners that are only connected to 3 or 2 agents respectively.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.4\linewidth]{004_team_1_agent_design/images/sc_network_clique.png}
+    \caption{'Clique' initialisation of 200 agents}
+    \label{fig:sc_network_clique}
+\end{figure}
+
+More complex initialisation patterns can also be explored. In this 'clique' initialisation pattern (figure \ref{fig:sc_network_clique}) the first 10 agents are all each connected to each other and 40 other agents. Consequently, those next 40 agents are each connected to the first 10 agents with a few connections to the rest of the grid, producing three tiers of agents with connections.
+
+These network values can change during the game itself, and is updated as follows:
+\begin{enumerate}
+    \item At the start of each fight round, agents gossip to their connections about $N_A$ agents with the highest average Trustworthiness and Honor values - thereby praising them. The number of agents gossiped about in the message, $N_A$ is given by 
+    \[
+    N_A = P_A * (number of alive agents)
+    \]
+    where $P_A$ is the proportion of living agents admired (set to $0.1$) and $0 < P_A < 0.5$. A message is sent to the agent's connections containing a list of the agents and indicating that they are being praised.
+    \item The same happens for agents with the lowest average Trustworthiness and Honour values, with a proportion of alive agents disliked (set to $0.1$) being denounced and 
+    \item Upon receiving praise from an agent A about agent B, the agents network value of B increases, while the opposite is true if agent B was denounced. The network value of agent B changes based on the following formula:
+    \[
+    network_B += sign * perception_A * 0.1 * network_B
+    \]
+    
+    Where $sign$ is $+1$ if the agent is praised and $-1$ if the agent is being denounced. $perception_A$ is the overall perception (average social capital value) of the sender. This means that if the sender has a negative social capital value then effect of the senders message is actually reversed.
+% TODO: Update these once we twweak the calculations in the game
+\end{enumerate}
+
+In the above update stages agents do not praise or denounce themselves, though an agent may directly tell an other agent that they are praising or denouncing them through these messages.
+
 
 \subsection{Trustworthiness}
 
@@ -78,10 +111,19 @@ In their 2007 paper Ostrom and Ahn give multiple examples of trustworthiness, bu
 
 Given that agents' interactions in the Escaping the Dark Pit(t) game are not one-shot, but repeated, handling trustworthiness as an inherent property of an agent's current observable characteristic is not ideal. Instead, as agents interact many times, it is more natural to use previous interactions to estimate future cooperativeness. Our agent therefore does not use observable characteristics to determine trustworthiness, as Ostrom and Ahn did. Instead, we define an agent's trustworthiness in the following way: "Trustworthiness is an agents tendency to cooperate with and trust other agents as evidenced by their past actions."
 
-Each agent updates the $Trustworthiness$ social capital value of other agents at the end of the round in the following way: The agent takes in the other agent's current state and passes it through its Q-functions. From the Q-functions then give the potential social welfare of each of the agent's possible actions. Depending on their utility to the group, each action is placed on a scale from -1 to 1. Where the value of 1 is given to the most beneficial action and -1 is given to the least beneficial action. Actions which are neither the best nor the worst are assigned a value by interpolating between -1 and 1 based on the social welfare of the action. With every action assigned a cooperativeness value between -1 and 1, the agent now reads in the selected action of the other agent. 
+Each agent updates the $Trustworthiness$ social capital value of other agents at the end of the round in the following way: The agent takes in the other agent's current state and passes it through its Q-functions. The Q-functions then give the potential social welfare of each of the agent's possible actions. Depending on their utility to the group, each action is placed on a scale from -1 to 1. Where the value of 1 is given to the most beneficial action and -1 is given to the least beneficial action. Actions which are neither the best nor the worst are assigned a value by interpolating between -1 and 1 based on the social welfare of the action. With every action assigned a cooperativeness value between -1 and 1, the agent now reads in the selected action of the other agent. And links it to the cooperativeness score between -1 and 1. Finally, we multiply the cooperativeness score of the action by 0.1 and add this to the original trustworthiness score. Note that it is the decision on whether to attack, defend or cower which we use to update the trustworthiness score.
 
 \subsection{Honour}
 \label{subsection:honour}
+
+The concept of honour should be well known by most, with one possible definition being that given by the Cambridge Dictionary: "to feel you must do something because it is morally right, even if you do not want to do it." Specifically, with the $Honour$ social capital value we seek to capture the feelings about the justness of an action. An example of a situation where such feelings could be encountered is when taking out the trash from one's shared apartment. Taking out the trash is a chore which few enjoy doing. As such, there is generally an unspoken agreement between tenants that they will share the burden of taking out the trash. If one tenant took out the trash the last time, the other tenant who did not take out the trash is likely to feel obligated to be the one who takes out the trash the next time. In this given situation, the feeling of honour ensured that burdens are fairly distributed. Similar feelings also come into play is situations where a person has been wronged. For example, if a tenant made themselves dinner and neglected cleaning the kitchen for several days, the other tenants may feel like it is just for them to have the same behaviour towards cleaning the kitchen. Based on these two examples of honour we can come up with the definition that $Honour$ is the running balance between favours and disfavours done for an agent and the favours and disfavours received from the same agent. 
+
+To update the $Honour$ social capital value we use the difference between the cooperativeness score of the other agents' actions with the cooperativeness score of the agent's own action. This difference is then multiplied by 0.1 and added to the original $Honour$ value of the agent. An example is as follows: Let agent 1 have chosen to attack and agent 2 to cower in a given round. At the end of the round, agent 2 will update the $Honour$ social capital value of agent 1 by first calculating a cooperativeness value for each of their actions in the same way as was done when updating trustworthiness. As cowering generally is an action which does not benefit the collective, agent 2's action will likely be given a cooperativeness value of -1. Inversely, attacking is generally a very cooperative action and will likely be linked to a cooperativeness value of 1. Agent 2's new $Honour$ social capital value for agent 1 will then be given by:
+\begin{equation}
+    Honour_{new} = Honour_{old} + 0.1*(1 - (-1)) = Honour_{old} + 0.2
+\end{equation}
+
+Note that as for all other social capital values, $Honour$ has a maximum value of 1 and minimum value of -1.
 
 \section{Social Bias}
 
@@ -96,56 +138,129 @@ biasAverage \leftarrow (1-e)*biasAverage + e*(1-ratioMadeToFight) \\
 \text{Else} \\
 biasAverage \leftarrow (1-e)*biasAverage - e*(ratioMadeToFight)
 \end{align*}
-% \begin{algorithmic}
-% \If{$madeToFight$} \\ 
-%     \State $biasAverage \gets (1-e)*biasAverage + e*(1-ratioMadeToFight)$ \\
-% \Else \\
-%     \State  $biasAverage \gets (1-e)*biasAverage - e*(ratioMadeToFight)$ \\
-% \EndIf 
-% \end{algorithmic}
-
-As can be seen the bias is shifted up or down slightly dependent on whether the agent is made to fight. In order to check that this algorithm was reliable it was tested in python to see how much bias was needed over how many rounds to be detected using this method. In each round of the testing the $ratioMadeToFight$ variable was randomly generated and then multiplied by a constant which was used as the probability that the agent was made to fight. We found that using an $e$ value of $0.1$ over 20 rounds the algorithm correctly predicted that there was a positive bias for a bias multiplier of $1.1$ roughly $80\%$ of the time. Similar results were found for a multiplier of $0.9$. The benefit of this algorithm is that it only requires us to store a single variable. This resultant $biasAverage$ score is positive when there is bad social bias against us and negative when there is favourable social bias.
-
-\section{Forgiveness}
 
 \section{Selfishness}
 
-Starts at a random value, as such we get agents with differing behaviour. Hope is that the social capital framework through sanctions encourages cooperative behaviour and thus low selfishness in the group as a whole.
+Another core element of our agents is selfishness. With selfishness we mean a tendency to do actions which promote one's own utility rather than the utility of others. In our agents, selfishness is represented by the $selfishness$ variable, a float value between 0 and 1. A $selfishness$ value of 0 indicates that when choosing an action the agent only considers the benefit to the collective, while a $selfishness$ value of 1 indicates that the agent only considers an action's benefit to the agent itself. Any agent with a selfishness value between 0 and 1 will consider an actions benefit to both themselves and the collective. At the beginning of each game each agents' $selfishness$ value is initialised to a random value in the range $[0,1]$. 
 
-Weighting of how much agent prioritises its own performance over the performance of the group as a whole.
+%Weighting of how much agent prioritises its own performance over the performance of the group as a whole.
 
 \subsection{Impact on Decision Making}
 
+The selfishness value is used when agents decide on what fight action they want to take. For deciding on a fight action each action passes their current state through their Q-functions. The Q-function then calculate the expected utility of an action for both the individual and the group as a whole. For each action, the agent then aggregates the two utility values into a single aggregated utility value using the following formula:
+
+\begin{equation}
+    Q_{action} = selfishness*Q_{self} + (1 - selfishness)*Q_{coop}
+\end{equation}
+
+In this formula $Q_{self}$ is the estimated utility value of an action to the agent itself and $Q_{coop}$ is the social welfare of the action. After aggregation, the agent then chooses the action which has the highest aggregated utility value. From the formula, it can quickly be deduced that any agent with a high degree of selfishness first and foremost will consider the estimated utility of an action to themselves rather than the utility for the group.
+
 \subsection{Updating Selfishness}
 
+Similarly to social capital, the $selfishness$ value is updated at the end of each round. To update its own selfishness value, each agent starts by creating a slice containing the id of every other agent which currently has a better state than the agent itself. To determine if another agent has a better state than the agent itself, it calculates the geometric mean of the HP, stamina, total attack and total defense of the other agent and of itself. The agent with the higher geometric mean is then considered to have a better state. After having identified agents with a better state, the agent uses its social capital map to calculate the average trustworthiness of those agents. It then compares this average value to the trustworthiness value it has stored for itself. If the trustworthiness value of the other agents is higher than the agents own trustworthiness value, the agent decreases its $selfishness$ value by 0.01. Inversely, if the other agents have a lower trustworthiness, the agent increases its selfishness by 0.01. Finally, if no other agents currently have a better state, then the agent does not modify its $selfishness$ value.
+
+With this updating method we have assumed that an agent's social capital $trustworthiness$ value is negatively correlated with their selfishness value, which should hold true given how trustworthiness is updated. In essence we then use the $trustworthiness$ value of an agent to estimate their selfishness. This way, an agent indirectly checks whether the agents which are performing better than it have a higher internal $selfishness$ value than them. The agent then adjusts their own $selfishness$ in the way which would make their behaviour emulate that of high-performing agents. It is hoped that through the sanctions imposed on non-cooperative agents highly selfish agents will perform poorly, and thus agents are incentivised to reduce their selfishness over the course of the game.
+
+\section{Forgiving and Forgetting}
+
+As was shown in the previous section on selfishness, the agents' behaviours are dynamic and over the course of the game an agent which started out as very selfish might over time become very selfless. With dynamic agent behaviours, recent actions are a better indicator of future actions than actions which an agent took far in the past. As such, it is beneficial for recent actions to hold greater importance when calculating social capital values than old actions. To achieve this goal we added a mechanism to "forget" an agent's previous action. The mechanism works by decaying the stored social capital values for all of the agents. Specifically, the algorithm used was the following:
+
+\begin{verbatim}
+    for each indicator in socialCapital:
+        if (indicator < 0)
+            indicator = 0.90*indicator
+        else
+            indicator = 0.95*indicator
+\end{verbatim}
+
+The exception to this formula for decaying social capital values was the $Institutions$ value. As has previously been discussed, technical limitations make it hard to compute updates for the $Institutions$ value. With little new information on an agents tendency to adhere to the norms of the institutions, it was decided to be wise not to forget past actions.
+
+As can be seen, negative social capital values, also known as indicators, decay faster than positive social capital values. The reasoning for this is that we seek to make agent cooperate. If agents hold negative social capital with each other this can cause non-cooperative actions to be taken and therefore more negative social capital to be produced. By quickly decaying negative social capital we seek to eliminate such negative social capital loops and make it easier for agents to give others second chances. Moreover, if it was instead positive social capital which decayed faster agents would be pushed towards trusting other agents less, achieving the opposite of our goal. We also believe this mimics human behaviour. For example, it is very common that individuals can have heated fights one day and despise the other person, only to forgive them the next day. However, the inverse seldom happens. If a person strongly likes a person one day, it is unlikely that they will stop liking that person the next day without any interaction between the two.
 
 \section{Sanctions}
+Since our agent deign is based on a society using Ostrom style rules it is important to have a mechanism to punish agents that aren't following these rules and acting against the interests of the group. Since the manner in which the rules are implemented does not having any inbuilt sanction system we use the system available of electing a leader, as well as trading as the mechanism though which to impose punishment.
 
 \subsection{Exclusion from Trading}
 
-\subsection{Elections}
+Should an agent have a spare weapon in their inventory, an agent would decide to gift the item to another agent without expecting any item in return. This is performed by first selecting a random subset of 20 agents (or less if less than 20 other agents are alive at this point). The item is offered to the agent with the highest non-zero social capital.
 
-Since our agent deign is based on a society using Ostrom style rules it is important to have a mechanism to punish agents that aren't following these rules and acting against the interests of the group. Since the manner in which the rules are implemented does not having any inbuilt sanction system we use the system available of electing a leader as the mechanism though which to impose punishment. When the collective group is generally following the rules our strategy prefers that there is no absolute leader and instead the against vote on rules that should be followed, however, if there we are measuring a great enough amount of negative social capital in the group our agent tries to elect a leader with absolute power in the hope that they will punish the agents working against the groups interests. We can use the social capital scores to decide which agent we most trust to impose this will. 
+The purpose of choosing a random subset of agents helps to spread out trades amongst agents and avoid many agents offering trades to just a select few agents with the highest social capital. An agent will skip making a trade to an agent if that agent already has a pending trade with itself, since a trade requires multiple rounds to be accepted.
 
-A problem introduced by this strategy is that when a leader is elected it is expected that they will act against the interests of a a subset of the agents by punishing them. This punishment may also mean that the fight decisions the leader makes may not seem entirely rational from the objective point of view of killing the current monster as fast as possible. These two factors can result in the leader not being liked by a large percentage of the current agents suggesting that being the leader that imposes these sanctions is often not beneficial to an agents long term survival chances. 
+Crucially, an agent will not make any trades to agents with a negative social capital, even if there are no other agents left. This imposes a form of punishment on agents that do not follow the rules and further encourages agents to act in the interests of the group.
 
-The result of this problem is that each agent needs to weigh the negative outcome of no agent taking this responsibility against the cost of being the one to make the decision. It is fairly simple to see that if our agent was the only type of agent in the game, such that every agent in the game had the same strategy, it would be impossible for any one agent to gain the advantage here. So to prevent being stuck in a sub-optimal Nash Equilibrium the system would be devised such that a random agent was chosen each time. However, since the game contains agents from other teams with alternative strategies it may be possible to implement a strategy here that is better than those implemented by other agents. Once again the decision making process our agent is based on finding the number of agents in a similar position to ours and the spread of agents states. We can use this information as well as the social capital of every agent to construct the following manifesto proposal system shown in figure~\ref{team1_manifesto_decision}
+\section{Elections}
 
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=0.75\linewidth]{004_team_1_agent_design/images/mainfestostrategy.png}
-    \caption{Manifesto proposal algorithm}
-    \label{fig:team1_manifesto_decision}
-\end{figure}
+\subsection{Fight Proposal Creation}
 
-Each of the decision making steps in the algorithm can be fairly difficult to estimate. We find the potential social reward of enforcing the policy based on how bad the mean current social capital is as well as the spread of agents state. This is because if we have positive social capital for most people then we wont have to introduce many sanctions and thus won't be disliked. Also if the spread of agent states is greater it was found that it can be harder to treat all agents fairly. 
+In order to engage in the proposal system our agent requires a mechanism to build proposals to suggest to the collective that align with what it believes is an optimum strategy to maximise the total agent survival rate. In order to do this the possible state space in which any agent can exists is split into discrete ranges using 4 variables. These variables are the agents health, stamina, attack and defense. The health and stamina variables are each split into three ranges corresponding to the three possible ranges present in a hidden agent state, and the attack and defense ranges are split into the either greater than the average attack or defense or less than the average. This gives in total 36 different agent states with which we can plug into the Q-Learning functions to output the optimum fight decision to maximise group survival for a given agent state. 
+We can then compose a rule using conditions relating to the ranges corresponding to the given agent state and give the action that these conditions should result in. The result of this is a proposal with 36 rules which can be submitted to the group.
 
-When taking an average of the social the total social capital the mechanism used for taking this average is very important. If we use a general $l_n$ norm the higher the value of $n$ the greater the affect of outliers will be on the computed mean, which may be preferable dependent on our strategy. The $l2$ norm was chosen for our agent but it can be hard to reason what a good choice here should be and so tuning was used to adjust this value. This average is used to decide whether or not to try and vote for a leader.
+\subsection{Fight Proposal Voting}
+
+When deciding on whether or not our agent should in favour of a proposal we first try and measure the accuracy of a proposal as compared to the strategy given by our Q-Function. We do this by finding the action the proposal would result in for each agent using the state knowledge we have and the action our system suggest, creating a overall percentage accuracy for all agents. In order to prevent $O(n^2)$ complexity here instead of computing this accuracy we compute it on a sample of the population of a constant size, in this case 20.  We then check if this value is above a given threshold and if it is vote positively. Since we have to vote on proposals as they come in and we don't know what future proposals may look like before voting on the current one we modify our threshold system to account for this. For each proposal that we receive, if we haven't already voted positively on a proposal this game round, we slightly decrease the required threshold. If we don't vote positively on any proposals in a given game round the starting threshold is slightly decreased and if we vote on the first proposal received the threshold is slightly increased. The voting threshold is set to the current starting threshold at the beginning of each game round.
+
+\subsection{Leader Election}
+
+Our original strategy made use of a leader that had absolute power over fight decisions as a mechanism to sanction agents that had bad social capital. This resulted in a system where being the leader was often an undesirable position as it required punishing many other agents, resulting in bad social capital for that agent. However, since the game design was changed such that agents can always defect from the leaders decisions this system was entirely changed as the leader can no longer be used as a sanction mechanism. In this new system leadership elections are greatly simplified and are now only dependent on the social capital of the agent giving a proposal, the length of the term and the overthrow threshold. The social capital score is shifted to lie between 0 and 1 (such that the greatest social capital is 1) before being squared. We then vote for the leader if we generate a random number less than this score.
+
+\section {Leadership}
+
+\subsection{Fight Resolution}
+
+When our agent is the current leader we always have $fightDecisionPower$ which means we can tell other agents what fight decision they should make (although they can ignore this). In order to decide what agent should do what we try to allow agents with higher social capital a greater chance of implementing the action that our selfish Q function suggests they should make and for agents with lower social capital we suggest they take the action in the interest of the group. To accomplish this we find the percentile position of each agent by sorting their mean social capital scores and then take the percentile (between 0 and 1) of this position. Next this percentile is raised to the 8th power to give each agent a score. If we generate a random number between 0 and 1 less than this score the agent is told to make the selfish action otherwise it is told to take the cooperative action. The 8th power is chosen as it results in roughly $10\%$ of the agents being permitted to take the selfish action which we found to be an acceptable value. The fraction of agents permitted to act selfishly on average for a power of $n$ is given with the following equation.
+
+\begin{align*}
+\int^1_0 x^n dx = \frac{1}{x+1} \\
+\frac{1}{8+1} \approx 0.1
+\end{align*}
+
+\subsection{Loot Allocation}
+
+Since our learning based approach isn't trained on loot allocations we are unable to make use of any kind of reward function to decide on what loot each agent should receive. Our solution therefore, simply tries to make the state of all agents as similar as possible as there is no real benefit to having a large spread in agent states. The only exception to this is that it is bad to give agents both a good weapon and good shields as they can only use one. This exception leads to some amount of specialisation being good for the overall system depending on how many agents should be defending each round. Our strategy gives each agent a score for each type of loot based on these factors, for example the lower and agents health the higher their health potion deserving score is. We also increase these scores inline with agents social capital. Once these scores have been found the cumulative distributions are found for all agents and a random number is chosen for each loot allocation within the range of this cumulative distribution. Using a binary search of the distribution the loot is allocated to the chosen agent. By adding this small amount of randomness instead of a purely logical solution we found a small increase in levels survived during early testing. This may be due to unforeseen bad edge cases in the overall strategy being averaged out.
+
 
 \section{Q-learning}
+\subsection{Variables}
+Q-learning \cite{qlearn} is a technique used to measure the "best" action to take given the current state of each agent. This is being used to help determine the next fight action, which includes "fight", "cower" and "defend". 
 
-\section{Experiments}
-do not use HP-pool as it is OP
+We learn a model that can map the agent state to a particular reward or Q-value. The following variables define what counts as part of the current agent state that this model takes in.
+\begin{equation}
+    State = \{HP, Stamina, TotalAttack, TotalDefense, MonsterHealth, MonsterAttack \}
+\end{equation}
+
+This variables are continuous for the agent's perception of itself. This were chosen as they were deemed as the most important variables that would impact their next decision. 
+
+All agents have two optimal strategies that help decide their next action.
+\begin{itemize}
+    \item \textbf{Cooperative strategy} - acting with the common good in mind and the survival of the collective
+    \item \textbf{Selfish strategy} - optimises for the survival of just that agent
+\end{itemize}
+The cooperative strategy should assign the highest reward to the action that leads to the most utility for the collective and all agents living the longest on average. The selfish strategy assigns the most reward to the action that leads to that agent living the longest.
+
+\subsection{Learning and reward function}
+Each state must be assigned a reward that we want to learn to predict. For the cooperative strategy, the reward is the mean remaining number of levels that the remaining agents in that game live for after that action was taken. This is a measure of how that action actually helped the collective. For the selfish strategy, the reward is the remaining number of levels that that agent survived for in that game. These measurements can only be calculated at the end of a game. The training data is made out of a collection of decisions made for each action together with the associated collective and selfish reward.
+
+There are several methods that could be used for Q-learning. A common method is to store the reward for each state in a table, although there are a very large number of combinations of possible state variables even if they were discretised to a smaller set of values like \{Low health, medium health, high health\}. Therefore, we use linear regression instead, which maps the state to a reward. These functions are parameterised by a set of seven weights each as shown in , and each function predicts the reward for one type of action. A strategy is made up of these three linear regressors for each action. There are two strategies that are learned, so six functions are set up. 
+
+\begin{equation}
+\begin{aligned}
+Q_{reward} = w_0 + w_1 * HP + w_2 * Stamina + w_3 * TotalAttack + \\
+w_4 * TotalDefense + w_5 * MonsterHealth + w_6 * MonsterAttack + w_7 * 1 / HP
+\end{aligned}
+\end{equation}
+
+\subsection{Training}
+These weights are initialised randomly. They dictate the Q-values and the decisions made by the agents. Several games are run using this strategy and each agent decision is stored together with the state. Once each game ends, the cooperative and selfish rewards can be calculated and are added to the log. This data forms a training set and a least squares problem $State * W = Reward$. The $W$ can be calculated and forms the new weights for the agent. These steps are repeated using the new strategy with the new weights, so that the next set of weights can be calculated.
+
+Using a fixed strategy throughout training may result in it collapsing to doing the same optimal strategy all the time and not trying different actions that actually may result in better situations in the future. Therefore, an exploration parameter is added, which sets the probability for the agent to diverge from the strategy and choose a random action instead. This allows for a bigger portion of the state space to be explored.
+
+After several iterations of this training, the final set of weights for the cooperative and selfish strategies are frozen and used at test time for the actual games. The game is dynamic and many parameters can change. It wouldn't make sense to learn a set of parameters for each game configuration, so the adaptation to the current setting is done using the other parts of this agents including selfishness. These trained strategies serve as a pre-trained ideology of collective and selfishness for the agents that influence how they act in the current scenario.
+
+
+
+\section{Notes on Implementation}
+
+While writing the agent we encountered a major issue with the balancing of actions within the game. Specifically, when using the standard parameter values as defined in the .env file for starting HP, starting attack, starting shield and base stamina a dominant strategy existed for surviving to the end of the game. This dominant strategy was simply for every agent to donate as much health as possible to the HP-pool. Moreover, the random agents were almost guaranteed to make it out of the pit simply from their random contributions to the HP-pool. In order to make any meaningful analysis on the performance of our agent in the game, it was therefore decided that our team would not use the HP-pool. For a fair comparison, we therefore also limited random agents from using the HP-pool in the analysis below.
 
 \section{Agent Performance}
 
