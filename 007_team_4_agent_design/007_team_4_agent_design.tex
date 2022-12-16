@@ -1,1 +1,45 @@
 \chapter{Team 4 Agent Design}\label{team_4_agent_design}
+
+\section{Strategy Overview}
+
+\par The overall agent strategy was formulated as surviving and escaping the pit(t) with high social contribution. The agent will come up with an action that try to strike a balance between contributing to the common good and being selfish in order to survive. When we contribute to the common good, we increase our rating of social contribution (C) , and we decrease the social contribution if we are being selfish. At the same time, we perform analysis on the social contribution of other agents as well by considering what they actually did in every round. In the following sections, we are going to describe our strategies for different aspects, including the combat round, post-combat round and governance.
+
+\section{Combat Round}
+
+\par During the combat round, our agent will assume that the number of agents who are going to cower in the coming round is the same as in the previous round. In this way, we make our decision based on this estimated maximum damage that we may receive. Also, our agent will have 2 choices. The first one is to simply do what our agent want to do based on certain heuristics, and the second one is to perform an action that is selected from the fight manifesto.
+
+\par For the first idea, if our HP is greater than the maximum damage that we may receive, this means that we will not die if we can choose to fight or defend in this round. Based on this idea, we further analysis our TotalAttack and TotalDefend. If TotalAttack is greater than or equal to TotalDefend * 0.8, we will choose to attack. Otherwise, we will choose to defend. The reason that why we multiply TotalDefend by 0.8 is that we think it is better to attack rather than defend in the long term hence we are able to kill the monster as soon as possible. Last but not least, if our HP is smaller than or equal to the maximum damage that we may receive, then we should cower and try to survive.
+
+\par For the second idea, the threshold of ST and HP being proposed are based on the ratio of agents in each of the quantised categories of ST/HP (low, mid and high ST/HP). Then if our HP and ST are greater than the estimated HP and ST threshold, the manifesto will be attack or defend based on the same logic in the first idea (do the best in long run). Otherwise, it will be cower. Then, if our proposed manifesto is contradicting with our own initial decision to cower, we will change this manifesto with certain probability according to our will in order to survive. As a result, our social contribution decreases. Meanwhile, with certain probability, we may also choose to stick with the manifesto we proposed. In this case, our utility value increases since we are compromising our own will to survive for the collective good.
+
+\par With these two ideas, our agent try to maximize social contribution and survive at the same time.
+
+\section{Post-combat Round}
+
+\par There are several actions we can perform during the post-combat round, which are donating HP to the health pool, trading with other agents and distributing loots.
+
+\subsection{Donating HP to the Health Pool}
+
+\par By donating HP to the health pool, we may be able to skip the combat round hence all other agents do not need to fight and take damage. This is beneficial to everyone. Therefore, if our HP is greater than a certain percentage of our total HP and our social contribution is below a certain threshold (this means we do not contribute to the common good), we will donate a fraction of our HP to the health pool. As a result, we increase our social contribution to indicate we have contributed to the common good. 
+
+\subsection{Trading}
+
+\par For trading, we are going describe our strategies on how to make requests to other agents and respond requests from other agents. We further separate the logic for each item (Weapon and Shield). Moreover, we assume that we always keep the best weapon and shield for ourselves so that we can maximize the damage we can deal and minimize the damage we may take. 
+
+\par For making requests on weapon, if our TotalAttack is smaller than ST, then we ask for a better weapon from other agents so we can maximize the damage that we can deal.
+
+\par For making requests on shield, if our TotalDefend is smaller than ST, then we ask for a better shield from other agents so we can minimize the damage that we may receive.
+
+\par For responding requests, we will accept requests more frequently if we have more items in the inventory so we are not going to waste resources and maximize the common good. If our social contribution is below a certain threshold (this means that we rarely contribute to the common good), we always accept requests no matter what the requests are, and then increase our social contribution. However, if our social contribution is above a certain threshold, we further decide whether we should trade based on how many items we have and a trading threshold. If the value of dividing the number of items by our social contribution is lower than the trading threshold, we are not going to trade. Otherwise, we will accept the requests.
+
+\subsection{Loot Distribution}
+
+\par During loot distribution, the threshold of ST and HP are being proposed again based on the ratio of agents in each of the quantised categories of ST/HP (low, mid and high ST/HP). If our HP is less than the estimated HP threshold, we get a HP potion from the loot pool. Also, if our ST is less than the estimated ST threshold, we get a ST potion from the loot pool. At the same time, if our HP and ST are greater than the estimated HP and ST threshold, this means that we are able to fight and we further analysis our TotalAttack and TotalDefend. If our TotalAttack is less than a certain threshold, we should get a sword from the loot pool to increase our TotalAttack. Also, if our TotalDefend is less than a certain threshold, we should get a shield from the loot pool to increase our TotalDefend.
+
+\section{Governance}
+
+\par The focus behind creating an apt system of governance, is how the knowledge of this elected chair is managed. Our governance is primarily based around an economy of esteem, that is a system that rewards agents who act in a manner that contributes to the progress of the group. This contribution is recognized in the form of attacking and defending, and the reward is in the form of a greater influence in voting on a proposal regarding fight and loot decisions. This is based upon the Athenian system of government in which greater cooperation contribution to the collective resulted in greater social benefits. Our chair aggregates knowledge based on prior fight actions; we chose 3 prior rounds as this was long enough to assess patterns in agents’ behaviour but not so long as to prevent an agent from being able to change behaviour. Upon having the proposals from each agent, a weighted mean is taken of the thresholds for attacking, defending, and loot acquisitions, creating a new proposal. The weights of this mean are the number of votes an agent can have. Having fought (attacked or defended) 3 times in the past 3 rounds, gives an agent 4 votes, having fought twice gives 3 votes, having fought once gives 2 votes, and having fought 0 times gives 1 vote. The benefit of this approach is two-fold. Firstly, it incentivizes agents to contribute more to the collective good by rewarding them with a greater ability to make a choice. Secondly, given that an agent who has been fighting in the past few rounds has lower health, it gives them a greater voice to explain why they potentially deserve to rest in the form a cower decision. Once this new weighted proposal is created it is broadcasted to all agents to vote on it. If the vote does not pass, the weight of each category is decremented by one, except those of agents who did not fight at all in the past 3 rounds. This yields a proposal closer to the simple majority and then is broadcasted again, and the process repeats each time a vote does not pass. While simple majorities are not the best form of knowledge aggregation, the voting not passing multiple times suggests that the desire of the agents is closer to a simple majority than a weighted mean based around the collective good. As a result of creating and broadcasting a new proposal, our leader requires both the fight imposition and loot imposition.
+
+\par Even in the case of a vote passing, certain agents are bound to be disobedient. Based on Ostrom’s 5th principle, there must be sanctions for those who disobey their expected action. However, our chair is not completely ruthless and is aware that very harsh punishments cause punished agents to resent the governance and the overall institution. As such, our chair only imposes sanctions in the form of reputation consequences by broadcasting, when an agent has disobeyed their assigned task, and how many times that agent has disobeyed. It is ultimately, up to each individual agent to decide how they want to deal with agents who disobey the chair.  
+
+%------------------------------------------------------------------end
