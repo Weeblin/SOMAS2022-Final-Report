@@ -19,7 +19,7 @@ After each round of the game, the agents will update their internal state. Speci
 
 % In addition to selfishness and social capital the agent also maintains a set of state variables that are used to make decisions with regard to leadership and voting. The most important of these is a measure of how well each agent in currently doing. This variable has to take into account many different aspects of game state and can be fairly difficult to create as defining a good game position is not obvious and of course depends on the decisions of others. An example of this difficulty is in deciding whether or not an agent having a higher attack value suggests it is doing better, in this case we found this to be a bad thing as in makes the agent more likely to have to engage in fights compared to agents with lower attacks. Several different factors such as this were combined to form this single variable which will be referred to as agent survival likelihood from here on. Once this score was computed for each agent all the scores were scaled such that the maximum score was less than 1 and the minimum was greater that 0, in addition, the mean was shifted so as to be close to 0.5. Finally, the standard deviation of this data-set was computed to give an indication of the spread of agents states, as the variation in state across the population can be a big factor in agent decision making. 
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=0.75\linewidth]{004_team_1_agent_design/images/agent_structure.png}
     \caption{Overview of agent structure.}
@@ -32,7 +32,7 @@ The core concept underlying the design of the agent is the idea of social capita
 
 In order to use social capital to promote cooperation, it must be used as part of a framework where the actions of an agent impact their social capital and where the social capital is used to make informed decision on whether or not to cooperate with other agents. For our agent, we used a similar framework to that presented by Petruzzi, Pitt, and Busquets\cite{complexity_reduction}. An overview diagram of this framework is presented in Figure \ref{fig:social_capital_framework}. In this framework events coming the environment are translated into social capital information which is passed to internal update functions for calculating metrics for each type of social capital. The social capital decision module uses the social capital metrics to calculate a value from 0 (no cooperation) to 1 (full cooperation) indicating whether an agent should cooperate or not. Implementing this framework for a simple cooperation game, Petruzzi et al. were able to achieve better performance than the dominant strategy given by game theory analysis. 
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=0.75\linewidth]{004_team_1_agent_design/images/socialcapitalframework.png}
     \caption{Framework for a social capital system.\cite{pitt}}
@@ -67,7 +67,7 @@ In our current configuration, an agent will communicate with other agents if the
 
 We investigated several ways of determining what $Networks$ values to give a non-zero initialization and thus which other agents an agent should communicate with from the beginning.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=0.4\linewidth]{004_team_1_agent_design/images/sc_network_grid.png}
     \caption{Grid initialisation of 200 agents}
@@ -76,7 +76,7 @@ We investigated several ways of determining what $Networks$ values to give a non
 
 The network value of an agent can be initialised at the start of the game. For example, agents can be initialised in a grid structure (figure \ref{fig:sc_network_grid}) where most agents are connected to 4 other agents, aside from agents at the edges or corners that are only connected to 3 or 2 agents respectively.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=0.4\linewidth]{004_team_1_agent_design/images/sc_network_clique.png}
     \caption{'Clique' initialisation of 200 agents}
