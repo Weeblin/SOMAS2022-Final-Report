@@ -19,5 +19,6 @@ jobs:
         run: mv main.pdf SOMAS2022-Final-Report.pdf
       - name: Release
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: SOMAS2022-Final-Report.pdf
