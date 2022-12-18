@@ -5,7 +5,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[a4paper, top=3cm, bottom=3cm, left=2.5cm, right=2.5cm, marginparwidth=2cm, headsep=1.2cm]{geometry} % layout
 \usepackage[pdfencoding=auto]{hyperref} % enables hyperlinks in the PDF
-\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue, citecolor=black} \urlstyle{same}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue} \urlstyle{same}
 \usepackage{amsmath}
 \usepackage{longtable}
 \usepackage{cleveref} \Crefformat{figure}{#2Fig.~#1#3} % makes referencing customizable (e.g. \Cref{}). See: https://texblog.org/2013/05/06/cleveref-a-clever-way-to-reference-in-latex/)
@@ -35,99 +35,15 @@
 \usepackage{listings-golang}
 \usepackage{adjustbox}
 \usepackage{multicol}
-\usepackage{glossaries}
- \usepackage{multirow}
- \usepackage{graphicx}
- \usepackage[normalem]{ulem}
- \useunder{\uline}{\ul}{}
- \usepackage[rightcaption]{sidecap}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
+\usepackage[rightcaption]{sidecap}
 \usepackage{graphicx} %package to manage images
 \setlength\parindent{24pt}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
-
-\makeglossaries
-
-\newglossaryentry{chair}
-{
-        name=Chair,
-        description={Elected leader of the agents}
-}
-\newglossaryentry{manifesto}
-{
-        name=Manifesto,
-        description={Conditions with which agents run for election as Chair}
-}
-\newglossaryentry{fight proposal}
-{
-        name=Fight Proposal,
-        description={A list of thresholds to determine an agents fight decision}
-}
-\newglossaryentry{loot}
-{
-        name=Loot,
-        description={Equipment dropped by defeated enemies, including swords, shields, health potions and stamina potions}
-}
-\newglossaryentry{potions}
-{
-        name=Potions,
-        description={Drank by agents to restore health points or stamina points}
-}
-\newglossaryentry{bonus attack}
-{
-        name=Bonus Attack,
-        description={Value of a sword equipped by an agent}
-}
-\newglossaryentry{bonus defense}
-{
-        name=Bonus Defense,
-        description={Value of a shield equipped by an agent}
-}
-\newglossaryentry{common pool resource}
-{
-        name=Common Pool Resource,
-        description={Loot dropped by enemy to be distributed amongst agents}
-}
-\newglossaryentry{institutionalised power}
-{
-        name=Institutionalised Power,
-        description={The power wielded by the Chair to control agents and direct their behavior through the use of rewards and punishments}
-}
-\newglossaryentry{sanctions}
-{
-        name=Sanctions,
-        description={Methods by which the Chair punishes disobedience}
-}
-\newglossaryentry{alternative dispute resolution}
-{
-        name=Alternative Dispute Resolution,
-        description={Settling disputes outside of formal proceedings with the assistance of an impartial dispute resolution body}
-}
-\newglossaryentry{social capital}
-{
-        name=Social Capital,
-        description={Social value calculated by an agent and assigned to another}
-}
-\newglossaryentry{utility}
-{
-        name=Utility,
-        description={Value of worth to the community or self, defined by an agent and assigned to another}
-}
-\newglossaryentry{agent}
-{
-        name=Agent,
-        description={A player within the game}
-}
-\newglossaryentry{equipment}
-{
-        name=Equipment,
-        description={Loot dropped by defeated enemies that includes; Swords, Shields, Heath Potions and Stamina Potions}
-}
-\newglossaryentry{trusted social network}
-{
-        name=Trusted Social Network,
-        description={The group of trusted agents within an agents social network, where 'trust' is individually defined by each agent}
-}
 
 \lstset{
   language=golang,
@@ -170,6 +86,7 @@
 % Use \\ to separate multiple supervisors (e.g. Robert\\Nathalie\\Mike)
 % Use full titles (e.g. Prof. Dr., Dr. )
 \newcommand{\supervisors}{Prof.\ Jeremy Pitt}
+\newcommand{\assistants}{Mr.\ Matthew Scott \\ Ms.\ Asimina Mertzani}
 
 % ToDo Command
 \newcommand{\ToDo}[1]{\textcolor{red}{#1}}
@@ -191,11 +108,11 @@
 % Don't change anything here
 \begin{document}
 \begin{titlepage}
-\newgeometry{top=2cm, bottom=4cm, right=1.5cm, left=1cm}
+\newgeometry{top=2cm, bottom=2cm, right=1.5cm, left=1cm}
 
 \tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt, anchor=west] (A) at (2cm,-1.5cm){\includegraphics[scale=0.5]{template_figures/logo.eps}};
 
-    \begin{center}
+\begin{center}
         \vspace*{6cm}
         \huge \textbf{\thesisType}\\
         \vspace*{0.75cm}
@@ -203,14 +120,21 @@
         \vspace{0.5cm}
         \Large {Department of Electrical and Electronic Engineering}\\
         \Large {Imperial College London}\\
-        \vspace*{5cm}
+        \vspace*{2cm}
         \huge \myName\\
-        \vspace*{0.5cm}
+        \vspace*{0.3cm}
         \LARGE \myDate\\
         \vfill
         Lecturer\\
         \vspace*{0.5cm}
-        \huge \supervisors\end{center}
+        \huge \supervisors
+        \vfill
+        Assistants\\
+        \vspace*{0.5cm}
+        \huge \assistants
+        \vfill
+
+\end{center}
 
 \end{titlepage}
 
@@ -278,8 +202,6 @@ Co-operative survival games refer to a subset of political choice games wherein 
 
 \end{description}
 
-\newpage
-\printglossary
 \newpage
 
 \pagenumbering{arabic}
