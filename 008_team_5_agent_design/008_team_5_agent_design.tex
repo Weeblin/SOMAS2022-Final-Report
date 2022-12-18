@@ -2,22 +2,11 @@
 \chapter{Team 5 Agent Design}\label{team_5_agent_design}
 \section{Introduction}
 \subsection{Leadership Personality}
-\noindent Utilitarianism: maximize happiness/wellbeing of all agents
-
-\noindent Aim of game is to defeat all monster while maintaining population above 60 percent
-
-
-\noindent Agents wellbeing for escaping dark pit related to surviving and damage received
-
-
-\noindent Utility inversely related to agent deaths and damage received.
-
-
-\noindent Altruism: selfless. concerned with benefitting all agents even with risk to own agent. Benefit in line with utility. Different from self-sacrifice, self sacrifice incurs loss on oneself. Not “pure” altruism as passing the game can be considered as a self-interest motive.
-
+\noindent When voted leader with fight power our agent practices utilitarianism and promotes actions that maximizes utility and wellbeing of all agents. For Escape the Dark Pitt, the collective aim is to defeat monsters and clear all levels with remaining population above 60 percent. Hence, we can derive utility being inversely related to damage received by agents and deaths. By prioritizing decisions which will bring upon the greatest utility overall even at his own risk and having a selfless concern for other agents, our agent can also be deemed altruistic. But as completing the game is in our agent’s self-interest, it is not pure altruism.
 \medskip
 
-\noindent After each monster is defeated, a loot pool is dropped. We believe the loot pool is similar to a Common Pool Resource. All agents have equal opportunities to request for items, deeming the loot pool non-excludable. After an item has been allocated, it is unavailable to other agents, hence the loot pool is also rivalrous in consumption in line with Common Pool Resources. The main difference between the two is the loot pool can be fully depleted each round and fully replenished at the next, while common pool resources generally won’t replenish if it is fully depleted. Our agent utilizes theory from equity and desert to aim for fairness and distributive justice by having each agent’s allocation affected by their contribution. Unlike the health points pool, another common pool resource, agents cannot directly contribute to it. We can determine an agent’s contribution by their fight decision as defeating the monster will drop loot, and in turn contribute to the loot pool. Fight decision along with other factors are used to calculate a social network score which will directly impact an agent’s ability to be allocated resource per our algorithm which will be mentioned under leader loot allocation
+\noindent After each monster is defeated, a loot pool is dropped. We believe the loot pool is similar to a Common Pool Resource. All agents have equal opportunities to request for items, deeming the loot pool non-excludable. After an item has been allocated, it is unavailable to other agents, hence the loot pool is also rivalrous in consumption in line with Common Pool Resources. The main difference between the two is the loot pool can be fully depleted each round and fully replenished at the next, while common pool resources generally won’t replenish if it is fully depleted. During loot allocation our agent utilizes theory from equity and desert [1] to aim for fairness and distributive justice by having each agent’s allocation affected by their contribution. Unlike the health points pool, another common pool resource, agents cannot directly contribute to it. We can determine an agent’s contribution by their fight decision as defeating the monster will drop loot, and in turn contribute to the loot pool. Fight decision along with other factors are used to calculate a social network score which will directly impact an agent’s ability to be allocated resource per our algorithm.
+
 
 \section{Social Network}
 
@@ -53,11 +42,7 @@ The boundaries for the trust scores are both at 0.2 and 0.8 and initial scores a
 
 \section{Leadership Logic}
 \subsection{Fight Logic}
-\noindent Adding to our agent's theme of Utilitarianism mentioned in the overview, our agent aims to maximize utility for all agents. For escaping the dark Pit, our collective goal is to defeat all monsters and complete the game with remaining population greater than the overthrow threshold of 60 percent. Hence, we derive utility being inversely related to total damage taken and agent deaths. Our algorithm does not differentiate our own agent amongst other agents, often putting our agent at risk in pursuit of the best collective outcome, proving our agent to also be altruistic.
-
-\noindent 
-
-\noindent There are 2 fighting conditions where the level can be passed without taking any damage or deaths. The leader fight algorithm will first check for the following two criterions: 
+\noindent As mentioned in leadership personality, our agent aims to maximize utility by prioritizing taking the least total damage and deaths when making fight decisions.There are 2 fighting conditions where the level can be passed without taking any damage or deaths. The leader fight algorithm will first check for the following two criterions: 
 
 \begin{enumerate}
 \item  $\sum{Agent~Attack>Monster~Resilience}$
