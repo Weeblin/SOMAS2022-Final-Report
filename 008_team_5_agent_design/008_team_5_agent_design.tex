@@ -9,6 +9,7 @@ When voted leader with fight power our agent practices utilitarianism [1] and pr
 After each monster is defeated, a loot pool is dropped. We believe the loot pool is similar to a Common Pool Resource. All agents have equal opportunities to request for items, deeming the loot pool non-excludable. After an item has been allocated, it is unavailable to other agents, hence the loot pool is also rivalrous in consumption in line with Common Pool Resources. The main difference between the two is the loot pool can be fully depleted each round and fully replenished at the next, while common pool resources generally won't replenish if it is fully depleted. During loot allocation our agent utilizes theory from equity and desert [1] to aim for fairness and distributive justice by having each agent's allocation affected by their contribution. Unlike the health points pool, another common pool resource, agents cannot directly contribute to it. We can determine an agent's contribution by their fight decision as defeating the monster will drop loot, and in turn contribute to the loot pool. Fight decision along with other factors are used to calculate a social network score which will directly impact an agent's ability to be allocated resources per our algorithm.
 
 \subsection{Collective Intelligence}
+
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.63\textwidth]{008_team_5_agent_design/images/Collective-Intelligence-Branches.jpg}
@@ -17,34 +18,36 @@ After each monster is defeated, a loot pool is dropped. We believe the loot pool
 \end{figure}
 \begin{flushleft}
 \setlength{\parindent}{2em}
-As an altruistic utility agent, our agent directs itself and impacts other agents for the collective benefit from its point of view. One way of doing so is to encourage the growth of collective intelligence. Where collective intelligence can be obtained from and have an impact on the following three fields: cognition, corporation, and coordination. We adapt \ref{fig:CQ} \cite{rescher1966} to this game scenario as follows:
+As an altruistic agent practicing utilitarianism, our agent aims to improve collective benefit through our own judgement. One way of doing so is to encourage the growth of collective intelligence. Where collective intelligence can be obtained from and have an impact on the following three fields: cognition, corporation, and coordination. We adapt \ref{fig:CQ} \cite{rescher1966} to this game scenario as follows:
 \end{flushleft}
 \begin{itemize}
   \item Cognition
     \begin{itemize}
         \item Perspectives
             \begin{itemize}
-            \item Every agent's perspective on their own status and overall situation - whether they know if they are a popular leader, a helpful peer to the situation and etc. It can be observed from leader status (winning leader election, finishing the leader's term without being overthrown, overthrown). How the majority of other agents are in the social network map, i.e., if most agents seem to be good on goodwill, then we could deduce that the agent itself might be the evil one in comparison, or the case that behaves the collective put pleasing each other at first and become in longer-term worsen the situation.
+            \item Every agent's perspective on their own status and overall situation - whether they know if they are a popular leader, a helpful peer to the situation, etc. It can be observed from leader status (winning leader election, finishing the leader's term without being overthrown, overthrown). How the majority of other agents are in the social network map, i.e. if only a few agents have a low social network profile, we can deduce that those agents are not welcomed; but if the majority of agents are in a low social network profile, it may be the case that our agent is actually the one that is not welcomed.
+
             \item Every agent's perspective on other agents can be observed from interaction and information, for example, fight decision (fight intention, defect), proposals, 
             \item Perspective to the environment - agents may over-estimate or under-estimate the monster and the loot market.
             \end{itemize}
         \item Interpretation of the common goal
             \begin{flushleft}
             \setlength{\parindent}{2em}
-            Agents can interpret the common goal and make up their own beliefs in different ways, for example, agents can decide to be where in between the spectrum of altruistic to selfish is the best solution to achieve the goal in their understanding and deduction.
+            Agents can interpret the common goal and make up their own beliefs in different ways. For example, agents may determine the spectrum between altruism and selfishness to be the best strategy of achieving the goal with understanding and deduction.
             \end{flushleft}
             \end{itemize}
-  \item Corporation
+  \item Cooperation
     \begin{itemize}
         \item Social Network
                 \begin{flushleft}
                 \setlength{\parindent}{2em}
-                In the corporation process, every agent can gain knowledge of other agents and become closer or further from another agent, there exists an underlying social network, that conducts the agent's communication and interaction in some ways.
+                In the cooperation process, every agent can gain knowledge of other agents to form an opinion and decide their future interactions. There exists an underlying social network that connects the agent's communication and interaction in some ways. By discovering this social network our agent can make more effective interactions with other agents.
+                
                 \end{flushleft}
         \item P2P interactions
                 \begin{flushleft}
                 \setlength{\parindent}{2em}
-                With the existence of the social Network, it can impact the distance of each P2P interaction, in this case, how likely to send a trading message and how likely to mutually agree on a negotiation. 
+                With the existence of the social Network, it can impact the social distance of each P2P interaction, in this case, how likely to send a trading message and how likely to mutually agree on a negotiation. 
                 \end{flushleft}
     \end{itemize}
   \item Coordination
@@ -52,10 +55,11 @@ As an altruistic utility agent, our agent directs itself and impacts other agent
         \item Collective action
                 \begin{flushleft}
                 \setlength{\parindent}{2em}
-                With a common goal in general, the agent’s cohort can move around itself toward the goal in some way, each agent can make its part of the contribution to drag the whole cohort, voting for example. Individual intelligence is the base of collective intelligence as well as how individual intelligence coordinates. With the leader mechanism and communication mechanism in this game, it gives more opportunities to form collective intelligence through coordination interactions.
+                With a common goal, agents can self organise to collectively move towards the goal in some way. Each agent's contribution can have an impact on the whole cohort, voting for example. Individual intelligence is the base of collective intelligence as well as how individual intelligence coordinates. With the leader mechanism and communication mechanism in this game, it gives more opportunities to form collective intelligence through coordination interactions.
                 \end{flushleft}
     \end{itemize}
 \end{itemize}
+
 
 
 \subsection{Agent Trade Personality}
