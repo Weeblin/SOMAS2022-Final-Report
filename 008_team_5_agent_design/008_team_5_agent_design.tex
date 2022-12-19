@@ -78,6 +78,67 @@ Considering agent’s fight decision as their contribution towards loot, and by 
 
 \section{Social Network}
 
+\begin{itemize}
+\item Social Network Motivation
+    \begin{flushleft}
+    \setlength{\parindent}{2em}
+     Since the agents are connected, interaction and impact can be made to other agents, therefore mapping and recording a social network can help our agent optimise the interaction outcome by going to the right agent. Social networks can also spot conflict in a system and help our agent identify its own position in the system. At last, due to this game's nature, an agent has limited scope to collect information meanwhile needs to make multiple multi-dimensional proposals and decisions as its prediction of optimal, however not long enough game duration is available to collect experience (plus the game can end early if agents fail), due to constraints, for the most of the time, an agent can only be trained with solo-play, duplicates of itself or random agents. Machine learning heavily based model is data-hungry, and risk overfitting to it self's characteristic. We can make a trust system in the social network to estimate the reliability of another agent. Therefore utilising other agents' experience(that is visible to our agent) as a source of information for our soft-coded rule-based agent is effective for individual intelligence growth.
+
+    \end{flushleft}
+\item Social Network Construction
+    \begin{itemize}
+        \item 	Our Scope - where social network trust scores can update upon
+            \begin{flushleft}
+            \setlength{\parindent}{2em}
+            There are two main fields that our agents can scope into to make and record their observations, interaction, and information, interaction is where arbitrary messages and decisions flow between two agents, while information is the one-way observation of our agents to other agents' visible states or their other behaviors. Interaction scope includes their trading process with us and their communication with us. Information scope includes their agent states, their votes, proposals, and defect status. 
+            \end{flushleft}
+        \item Our Perspective           
+            \begin{itemize}
+                \item Forming perspective
+                    \begin{flushleft}
+                    \setlength{\parindent}{2em}
+                    Once our agent has the observations, it uses its belief to form its perspective based on its observations. It parses the observations into two trust scores, strategy score and goodwill score, reference to our agent of how much can it trust another agent's strategy-related interaction and goodwill-related interaction. the history of another agent's past social network profiles is also one of the parameters to form new perspective.
+
+                    \end{flushleft}
+                \item Soft-coded boundary rules
+                    \begin{flushleft}
+                    \setlength{\parindent}{2em}
+                    Our agent reflex on itself based on the agent system's performance, then decides whether there is a need to modify its rules to be more helpful to the system. The personality classification boundaries are constant, but by applying scaling to agents' trust scores, the boundaries can also be viewed as a varying factor on a reverse to the scaling. 
+                    \end{flushleft}                
+                \item Forgiveness
+                    \begin{flushleft}
+                    \setlength{\parindent}{2em}
+                    "In social systems, forgiveness allows the truster (victim of the violation) to distinguish between intentional and unintentional violations (and a range of infractions in between)" \cite{pitt}. Forgiveness also helps the system restore stability. We chose very simple forgiveness by simply adding a recency bias to past history profile, time soothes the scar.
+
+                    \end{flushleft}                
+            \end{itemize}
+        \item Our intelligence 
+            \begin{flushleft}
+            \setlength{\parindent}{2em}
+            By collecting and digesting as much information from inside and outside of our agent, and with experience increase, our agent grows the intelligence that allows it to act more effectively to help the collective reaching the goal. It converts its obtained knowledge into intelligence. The knowledge can be distinguished as Knowledge of the environment, i.e. how much damage we receive and how much loot we gain, how many agents, and our estimation of their resources lost when agents interact with the environment. Knowledge of other agents, which is the perspective of them that our agent formed.  The advantage of this process is that our agent becomes giving more and more reliable predictions of optimal next-move decisions.
+
+            \end{flushleft}        
+    \end{itemize}
+
+\item Social Network Function
+            \begin{flushleft}
+            \setlength{\parindent}{2em}
+            \end{flushleft}
+
+\item Social Network - Information - our scope and observation
+
+\item Social Network - Interaction - our exploitation of the trusts
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
 We don't want to exclude one's excellence in one field due to short comes in an irrelevant fields.
 
 Here we have agents' algorithm for their fight strategy and the algorithm for their leader duties' functionality potentially written differently.
@@ -140,6 +201,44 @@ The boundaries for the trust scores are both at $0.2$ and $0.8$ and initial scor
     \label{table:personality_impact}
 \end{table}
 
+
+
+\subsection{Manifesto}
+\begin{itemize}
+\begin{itemize}
+    \item Loot Power – Yes​
+    \item Fight Power – Yes​
+    \item Term Length –  1 level if haven't been elected before​
+        \begin{itemize}
+                \item –  2 levels if running the 2nd leader term​
+                \item –  3 levels if running the 3rd leader term​
+                \item –  \…​
+                \item –  back to 1 level if overthrow happens in its last leader term, but wait until recency bias\^time is low ​
+        \end{itemize}
+    \item Overthrow Threshold – 50\%
+\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+    \item Reflexive governance
+
+            \begin{flushleft}
+            \setlength{\parindent}{2em}
+        The agent reflex on its leadership quality and extend to all related algorithm and then can modify its coordinating strategy and corresponding cognition, based on knowing how well it has been as a leader. If the agent has made a leader, it can deduce that itself has a high reputation in other agents' inner states. If a leader has made to the whole term length, then it can gain confidence in its leadership ability, hence has the confidence to run for a longer term in the next time, which is more difficult because we presume it is less appealing than a shorter term manifesto to and need to have a even higher hidden reputation among other agents in order to win. If a leader has been overthrown, depending on its overthrown threshold, it loses its confidence of leadership possibly as well as some reputation, the way our agent reflex on being overthrown is to be humble of their leadership logic and start with running for 1 level of term length. Furthermore, this agent may want to rest for some time until the situation changed, its reputation is restored and it reflexively learned to refine its belief and rules, that it wants to rerun for leader again.
+            \end{flushleft}
+    \item Individual intelligence and Collective Intelligence via Education
+            \begin{flushleft}
+            \setlength{\parindent}{2em}
+    		Being  a leader is not only empowered with extra impact to contribute to the system, but also enlarges the agent's scope. In this game, by being a leader can count the votes and has the ability to see every loot request message, which is not visible to a normal agent. By being a leader, if the agent opens entry to collect these information it can gain knowledge hence intelligence  faster. The reason of our agent's manifesto start with only 1 term length is for that the manifesto becomes more appealing to other candidates and hence more likely to become a leader to learn. By incrementing the term length once this agent has been raised to see further, it also want to leave more opportunity for agents that requesting less term length to also go to the leader position to be educated with the same vision our agent once had. Also by encouraging agents to run for leadership with shorter term length can increase the leader liquidity, hence more agents can become leaders once and have this "eye open" information collection opportunity. And the aim in the last is to increase collective intelligence.
+            \end{flushleft}
+    \item Individual Knowledge Diversity
+            \begin{flushleft}
+            \setlength{\parindent}{2em}
+            Continue to that we encourage leader liquidity, so that more agent can expose their coordinate logic as a leader. As a normal agent, experiencing more leaders in the same amount of time can let it know what coordinating logic are existing in the system, and diversify the choice of coordinating methods, which was originally each leader's own individual knowledge.
+            \end{flushleft}
+\end{itemize}
+
+
 \section{Election}
 
 \section{Leadership Logic}
@@ -200,7 +299,7 @@ The scaling factors will give a more comprehensive view for different agent figh
 If the number of fighting agents exceeds the calculated number of deaths for the iteration, the level is passed. From the iterations that meet this criterion, the one which optimizes for least damage or least deaths are chosen with regards to our predetermined priority. The algorithm will finally return a fight decision map reflecting our best fight solution for the current level.
 
 
-\subsection{Manifesto}
+
 
 
 
