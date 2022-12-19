@@ -123,6 +123,7 @@ Considering agent’s fight decision as their contribution towards loot, and by 
 \item Social Network Function
             \begin{flushleft}
             \setlength{\parindent}{2em}
+            The implementation and exploitation of personalities and trust scores can be found in \ref{fig:Information2Trusts} and \ref{table:personality_impact}
             \end{flushleft}
 
 \item Social Network - Information - our scope and observation
@@ -307,7 +308,8 @@ The scaling factors will give a more comprehensive view for different agent figh
 
 If the number of fighting agents exceeds the calculated number of deaths for the iteration, the level is passed. From the iterations that meet this criterion, the one which optimizes for least damage or least deaths are chosen with regards to our predetermined priority. The algorithm will finally return a fight decision map reflecting our best fight solution for the current level.
 
-
+\subsection{allocation logic}
+By reasonably allocating loot pool resources the leader agent can benefit more agents without making any agent worse. In order to avoid Pareto inefficient, our agent will let anyone who requests the loot take their requested item, unless there is a clash. Our agent's duty is to solve the clash by iterating the fighting logic with the agents in the highest personality category, which also meet some extra conditions to enter iteration. This iteration is used to find where is the Pareto optimal that can utilise this item the most. The category of personalities and the rank of it, and extra conditions can be found in \ref{table:personality_impact}
 
 
 
