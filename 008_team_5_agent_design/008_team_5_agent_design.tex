@@ -6,7 +6,57 @@
 % FIXME - Fix reference labels
 When voted leader with fight power our agent practices utilitarianism [1] and promotes actions that maximizes utility and wellbeing of all agents. For Escape the Dark Pitt, the collective aim is to defeat monsters and clear all levels with remaining population above 60 percent. Hence, we can derive utility being inversely related to damage received by agents and deaths. By prioritizing decisions which will bring upon the greatest utility overall even at his own risk and having a selfless concern for other agents, our agent can also be deemed altruistic. But as completing the game is in our agent's self-interest, it is not pure altruism.
 
-After each monster is defeated, a loot pool is dropped. We believe the loot pool is similar to a Common Pool Resource. All agents have equal opportunities to request for items, deeming the loot pool non-excludable. After an item has been allocated, it is unavailable to other agents, hence the loot pool is also rivalrous in consumption in line with Common Pool Resources. The main difference between the two is the loot pool can be fully depleted each round and fully replenished at the next, while common pool resources generally won't replenish if it is fully depleted. During loot allocation our agent utilizes theory from equity and desert [1] to aim for fairness and distributive justice by having each agent's allocation affected by their contribution. Unlike the health points pool, another common pool resource, agents cannot directly contribute to it. We can determine an agent's contribution by their fight decision as defeating the monster will drop loot, and in turn contribute to the loot pool. Fight decision along with other factors are used to calculate a social network score which will directly impact an agent's ability to be allocated resource per our algorithm.
+After each monster is defeated, a loot pool is dropped. We believe the loot pool is similar to a Common Pool Resource. All agents have equal opportunities to request for items, deeming the loot pool non-excludable. After an item has been allocated, it is unavailable to other agents, hence the loot pool is also rivalrous in consumption in line with Common Pool Resources. The main difference between the two is the loot pool can be fully depleted each round and fully replenished at the next, while common pool resources generally won't replenish if it is fully depleted. During loot allocation our agent utilizes theory from equity and desert [1] to aim for fairness and distributive justice by having each agent's allocation affected by their contribution. Unlike the health points pool, another common pool resource, agents cannot directly contribute to it. We can determine an agent's contribution by their fight decision as defeating the monster will drop loot, and in turn contribute to the loot pool. Fight decision along with other factors are used to calculate a social network score which will directly impact an agent's ability to be allocated resources per our algorithm.
+
+\subsection{Collective Intelligence}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.63\textwidth]{008_team_5_agent_design/images/Collective-Intelligence-Branches.jpg}
+    \caption{Collective Intelligence Branch}
+    \label{fig:CQ}
+\end{figure}
+\begin{flushleft}
+\setlength{\parindent}{2em}
+As an altruistic utility agent, our agent directs itself and impacts other agents for the collective benefit from its point of view. One way of doing so is to encourage the growth of collective intelligence. Where collective intelligence can be obtained from and have an impact on the following three fields: cognition, corporation, and coordination. We adapt \ref{fig:CQ} \cite{rescher1966} to this game scenario as follows:
+\end{flushleft}
+\begin{itemize}
+  \item Cognition
+    \begin{itemize}
+        \item Perspectives
+            \begin{itemize}
+            \item Every agent's perspective on their own status and overall situation - whether they know if they are a popular leader, a helpful peer to the situation and etc. It can be observed from leader status (winning leader election, finishing the leader's term without being overthrown, overthrown). How the majority of other agents are in the social network map, i.e., if most agents seem to be good on goodwill, then we could deduce that the agent itself might be the evil one in comparison, or the case that behaves the collective put pleasing each other at first and become in longer-term worsen the situation.
+            \item Every agent's perspective on other agents can be observed from interaction and information, for example, fight decision (fight intention, defect), proposals, 
+            \item Perspective to the environment - agents may over-estimate or under-estimate the monster and the loot market.
+            \end{itemize}
+        \item Interpretation of the common goal
+            \begin{flushleft}
+            \setlength{\parindent}{2em}
+            Agents can interpret the common goal and make up their own beliefs in different ways, for example, agents can decide to be where in between the spectrum of altruistic to selfish is the best solution to achieve the goal in their understanding and deduction.
+            \end{flushleft}
+            \end{itemize}
+  \item Corporation
+    \begin{itemize}
+        \item Social Network
+                \begin{flushleft}
+                \setlength{\parindent}{2em}
+                In the corporation process, every agent can gain knowledge of other agents and become closer or further from another agent, there exists an underlying social network, that conducts the agent's communication and interaction in some ways.
+                \end{flushleft}
+        \item P2P interactions
+                \begin{flushleft}
+                \setlength{\parindent}{2em}
+                With the existence of the social Network, it can impact the distance of each P2P interaction, in this case, how likely to send a trading message and how likely to mutually agree on a negotiation. 
+                \end{flushleft}
+    \end{itemize}
+  \item Coordination
+    \begin{itemize}
+        \item Collective action
+                \begin{flushleft}
+                \setlength{\parindent}{2em}
+                With a common goal in general, the agent’s cohort can move around itself toward the goal in some way, each agent can make its part of the contribution to drag the whole cohort, voting for example. Individual intelligence is the base of collective intelligence as well as how individual intelligence coordinates. With the leader mechanism and communication mechanism in this game, it gives more opportunities to form collective intelligence through coordination interactions.
+                \end{flushleft}
+    \end{itemize}
+\end{itemize}
+
 
 \subsection{Agent Trade Personality}
 
@@ -49,13 +99,6 @@ The boundaries for the trust scores are both at $0.2$ and $0.8$ and initial scor
     \label{fig:Information2Trusts}
 \end{figure}
 \clearpage
-
-\begin{figure}[htb]
-    \centering
-    \includegraphics[scale=0.5]{008_team_5_agent_design/images/Interaction.png}
-    \caption{Other agents' personality impact on our agent's interaction behaviour}
-    \label{fig:my_label}
-\end{figure}
 
 \begin{table}[h!]
     \centering
