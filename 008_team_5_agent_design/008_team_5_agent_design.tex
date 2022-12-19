@@ -126,8 +126,17 @@ Considering agent’s fight decision as their contribution towards loot, and by 
             \end{flushleft}
 
 \item Social Network - Information - our scope and observation
+            \begin{flushleft}
+            \setlength{\parindent}{2em}
 
+The agent's strategy trust score and goodwill trust score are both in the range of [0,1], and both are initialised at 0.5. If during an update of trusts, their maximum variation in a trust exceeds 1, that trust score will be scaled by the max-min method.
+            \end{flushleft}
 \item Social Network - Interaction - our exploitation of the trusts
+        \begin{flushleft}
+        \setlength{\parindent}{2em}
+        In order to save computational complexity, a personality perspective is formed by parsing trust scores. with both the upper boundary at 0.8 and the lower boundary at 0.2, the trusts are quantised and categorised into 3 goodwill personalities of {good, goodwill\_neutral, evil} and 3 strategy personalities of {lawful, strategy\_neutral, chaotic}. The two sets of personalities can be combined to map a 2-D in total 9 personalities. 
+        \end{flushleft}
+
 \end{itemize}
 
 
@@ -382,8 +391,40 @@ So in fact each agent need to keep two trust record for other agents, $T_{normal
 
 \noindent An issue considered when choosing trade partners was if our policy was deterministic, such that our agent always requested from cowering agents with the best shield or weapon, all team 5 agents initialized within the game would have clashing trade requests. To resolve this issue, our agent searches for trade partners through random starting positions within the agent map and checks iteratively if agents meet our trade criteria of cowering and having a better weapon or shield. A trade request will sent to the first agent that meets our criteria.
 
-
+\pagebreak{}
 \section{Experiment}
+
+\subsection{Social Network}
+
+As the \ref{fig:snRresults} show, it appears that in a team5 agent's perspective, the system diverges and cliques up at around level 20. And then two due to the system being connected, the two cliques impact each other (level 25) and the two cliques dissolve into diverse places(level 33). The self-agent in an earlier stage of the game does not gain enough information to identify other agents' profiles. With more and more interactions and observations, the agent is able to identify smaller differences in other agents and separate them, which also involves scaling the scores in some of the updates.
+
+
+
+    \begin{figure*}[t!]
+        \subfloat[]{%
+            \includegraphics[width=.5\linewidth]{008_team_5_agent_design/images/level2.png}%
+            \label{subfig:a}%
+        }\hfill
+        \subfloat[]{%
+            \includegraphics[width=.5\linewidth]{008_team_5_agent_design/images/level20.png}%
+            \label{subfig:b}%
+        }\\
+        \subfloat[]{%
+            \includegraphics[width=.5\linewidth]{008_team_5_agent_design/images/level25.png}%
+            \label{subfig:c}%
+        }\hfill
+        \subfloat[]{%
+            \includegraphics[width=.5\linewidth]{008_team_5_agent_design/images/level33.png}%
+            \label{subfig:d}%
+        }
+  \caption{Agents' trust score at different levels, with strategy and goodwill personality boundaries both at 0.2 and 0.8, 30 of each type of agents are instantiate}
+        \label{fig:snRresults}
+    \end{figure*}
+
+
+
+
+
 
 \subsection{Leader Fight Logic}
 The leader fight logic's execution time was tested to ensure it is within the time limit of 0.5 seconds.
