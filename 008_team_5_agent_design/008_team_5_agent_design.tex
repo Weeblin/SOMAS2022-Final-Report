@@ -8,6 +8,20 @@ When voted leader with fight power our agent practices utilitarianism [1] and pr
 
 After each monster is defeated, a loot pool is dropped. We believe the loot pool is similar to a Common Pool Resource. All agents have equal opportunities to request for items, deeming the loot pool non-excludable. After an item has been allocated, it is unavailable to other agents, hence the loot pool is also rivalrous in consumption in line with Common Pool Resources. The main difference between the two is the loot pool can be fully depleted each round and fully replenished at the next, while common pool resources generally won't replenish if it is fully depleted. During loot allocation our agent utilizes theory from equity and desert [1] to aim for fairness and distributive justice by having each agent's allocation affected by their contribution. Unlike the health points pool, another common pool resource, agents cannot directly contribute to it. We can determine an agent's contribution by their fight decision as defeating the monster will drop loot, and in turn contribute to the loot pool. Fight decision along with other factors are used to calculate a social network score which will directly impact an agent's ability to be allocated resource per our algorithm.
 
+\subsection{Agent Trade Personality}
+
+\noindent Our trade strategy extends the Agent’s utilitarian approach and altruistic personality to achieving the collective aim. With this in mind, there is no significance in the weapon or shield we equip if the game is lost. Hence, no concern is given towards the weapon or shield equipped when finally escaping the pit. As each agent has an equal opportunity of receiving loot if they chose to fight, the exclusivity of shields and weapons are low. As we have no concern of our final equipped shield or weapon, the allocation of loot (consumption) to other agents will not subtract from our utility, deeming subtractability to be low. This in turn means that trading is not seen as a common pool resource problem.
+\noindent On the contrary, other agents may value their weapon and shield equipped at the end of the game. In other words, trading will benefit other agents as weapon and shield statistics are valued, so the subtractability of weapons and shields would greatly increase in their perspective.
+Considering agent’s fight decision as their contribution towards loot, and by coupling trading with fight decision, we can frame this as a common pool resource problem. The common pool resource is sustained through defeating monsters with increasing difficulty to drop new and better items. Our agent takes advantage of this observation and rewards agents with regards to their contribution.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.60\textwidth]{008_team_5_agent_design/images/13.png}
+    \caption{Our agent vs other agent's perspective on trading}
+    \label{13}
+\end{figure}
+
+
 \section{Social Network}
 
 We don't want to exclude one's excellence in one field due to short comes in an irrelevant fields.
@@ -218,6 +232,11 @@ So in fact each agent need to keep two trust record for other agents, $T_{normal
 
 \section{Trading Logic}
 
+\noindent Since each trading round is limited to five messages, choosing which agents to trade with is vital. The leader fight logic is used in our agent’s trade strategy for every decision made. We use the outputted optimal fight decision map to filter out agents that will not likely fight in the following round. Agents predicted to either attack or defend will be prioritised as potential trade candidates. If our own agent is cowering for the following round, agents fighting will be offered our best weapon or shield. This is to ensure the best equipment are always utilized to maximise our chance to escape the pit and achieve the collective goal.
+
+\noindent Our trading strategy will also prioritise agents having a positive or neutral strategy trust over agents with lower trust scores to penalise agents that either defected from their fight decision or are selfish in trades. The combination of agent trust and agent fight actions will reward and encourage agents to contribute towards the common pool resource.
+
+\noindent An issue considered when choosing trade partners was if our policy was deterministic, such that our agent always requested from cowering agents with the best shield or weapon, all team 5 agents initialized within the game would have clashing trade requests. To resolve this issue, our agent searches for trade partners through random starting positions within the agent map and checks iteratively if agents meet our trade criteria of cowering and having a better weapon or shield. A trade request will sent to the first agent that meets our criteria.
 
 
 \section{Experiment}
