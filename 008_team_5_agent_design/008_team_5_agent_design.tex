@@ -146,11 +146,15 @@ If the number of fighting agents exceeds the calculated number of deaths for the
 
 
 \section{Fight Logic}
-The fighting stage could be viewed as a Markov decision process, where from the current state, an agent could have certain probability to transit into another state (new or same), by performing one of the three fighting actions, Attack / Defend / Cower.
+To pass the fighting game as an individual, we want our agent to have the ability to learn within a dynamic environment, where consequences could be introduced via an agent itself or other agents' actions. Learning in this case means to acquire a bank of knowledge and update them throughout time, in order to help fighting the monsters.
 
-The state space $S$ is designed based on level of health, stamina, attack, defence of an agent.
+\subsection{Fight decision: Q learning}
+The fighting stage from an individual agent's point could be viewed as a Markov Decision Process, where from the current state, an agent could have certain probability to transit into another state (new or same), by performing one of the three fighting actions, Attack / Defend / Cower. Depends on whether the agent end up in a better or worse state, it receive some corresponding reward which will cause it to like or dislike the action just being performed.
+
+The state space is designed based on the health, stamina, attack and defence of an agent. Health and stamina are categorised relative to their initial value, so for agent with initial health of 1000, the \textit{Low} category is always $\leq 300$. However, the attack and defence are categorised relative to all other observable agents, for representing potential roles in a population. An agent could be a master fighter (\textit{Master}) when it's attack value is greater than most of the population, or it could be an elder or child (\textit{Weakee}) who's not that good at fighting.
 
 \begin{table}[!ht]
+    \centering
     \begin{tabular}{|l|l|l|l|}
         \hline
         \begin{tabular}[c]{@{}l@{}}Health \\ (to init health)\end{tabular}                      & \begin{tabular}[c]{@{}l@{}}Stamina \\ (to init stamina)\end{tabular}                    & \begin{tabular}[c]{@{}l@{}}Attack \\ (to observable agents)\end{tabular}                   & \begin{tabular}[c]{@{}l@{}}Defence \\ (to observable agents)\end{tabular}                  \\ \hline
@@ -159,18 +163,58 @@ The state space $S$ is designed based on level of health, stamina, attack, defen
         \textit{\begin{tabular}[c]{@{}l@{}}High\\ 60\% \textless hp\end{tabular}}               & \textit{\begin{tabular}[c]{@{}l@{}}High\\ 60\% \textless ap\end{tabular}}               & \textit{\begin{tabular}[c]{@{}l@{}}Master\\ 75\% \textless AT\end{tabular}}                & \textit{\begin{tabular}[c]{@{}l@{}}Master\\ 75\% \textless SH\end{tabular}}                \\ \hline
     \end{tabular}
 \end{table}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{008_team_5_agent_design/images/state_normal_distro.png}
+    \caption{Assumed normal distribution of attack / defence roles.}
+    \label{fig:state_normal_distro}
+\end{figure}
+\noindent
+So in total there's 81 different states, where the health / stamina categories are equally separated; the attack / defence categories are separated assuming normal distribution, so extremes are less common and are valuable to treat differently.
 
-So in total there's 81 different states. The attack / defence intervals are separated assuming normal distribution, so extremes are less common and are valuable to treat differently.
-
-In terms of decision, our agent utilise the Q learning algorithm, where each agent keeps a map of Q values and the action taken from last state, these Q values are updated throughout the game according to feedback (reward) on the action taken at certain state.
+In terms of decision, our agent utilise the Q learning algorithm, where each agent keeps a table of Q values as their utilities toward the fighting actions at a given state (a state-action pair), these Q values are updated throughout the game according to feedback (rewards) after each fighting round.
 
 Updates rule:
+\begin{center}
+$Q(S,A) \leftarrow Q(S,A) + \alpha(R(S^+) + \gamma \max\limits_{A^+} Q(S^+,A^+) - Q(S,A))$
+\end{center}
+\noindent
+Where $Q(S,A)$ is the $Q$ value for a state($S$)-action($A$) pair; $R(S^+)$ is the reward received at the arrived new state, right now it's simply based on the percentage health loss / gain of an agent; $\gamma \max\limits_{A^+} Q(S^+,A^+)$ tries to reflect the potential future reward (in long term), propagate out with a decay rate $\gamma$; $\alpha$ is a learning rate determine how significant each update could be.
 
-$Q(S,A) \leftarrow Q(S,A) + \alpha(R(S,A) + \gamma \max\limits_{A^+} Q(S^+,A^+) - Q(S,A))$
+The key characteristics of Q learning is that it doesn't really need the state transition probabilities to solve a MDP; also it take in account of the long term effect of an action from a state by the $\gamma \max\limits_{A^+} Q(S^+,A^+)$ term.
 
-The Q value for a state-action association pair represents how much an agent favour a specific action at a given state. So the strategy for an agent is to follow the highest Q value most of time, but allow some random deviation from that to explore the unknowns.
+Higher Q value for a state-action pair makes it more favourable for an agent to follow. So the strategy for an agent is to go for an action with the highest Q value at the current state, for exploiting its knowledge, but at the same time also allow some random deviation from that to explore the unknowns.
 
+\subsection{Fight proposal: best self-experience}
+As the exact opposite to making fight decision, which one has to answer the question ``what's the most promising action to do in such situation", making fight proposal to the others would be to answer the question ``what's the most promising situation to be in if one wants to conduct such action". So in our agent's case, it would be finding the state associated with the highest Q value for a given action.
 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\textwidth]{008_team_5_agent_design/images/proposal_from_qtable.png}
+    \caption{Proposing the most promising state for an action from the Q table}
+    \label{fig:proposal_from_qtable}
+\end{figure}
+
+While every agent proposes the best strategy according to their self-experience, and all those proposals go to the leader, then depends on how the leader decided to board-cast the appropriate proposal(s) for the group, this could be seen as a process of trying to achieve knowledge aggregation.
+
+\section{Election}
+The election stage is setup so that, each of the $N$ agents need to vote for one or more of the other $N-1$ agents. Our agent is designed to produce a trust value $T_{lead}$ for every other agents, it aims to use this social capital to simplify the process of choosing the leader, without explicitly examining other's leader functions.
+
+\subsection{Event-Recency dependent trust}
+The trust is designed to be event and recency dependent, which means the recent event of an agent have more importance than those which are long time ago. More precisely defined as:
+\begin{center}
+$\qquad T(a,b) \leftarrow \gamma \cdot T(a,b) + v(r)$   
+\end{center}
+Where $T(a,b)$ is the trust of agent $a$ toward agent $b$; $gamma$ is a decay factor to reduce the effect of past memory; $v(r)$ is the rating for an specific event $r$ that happened, typically related to health loss / gain of $a$ and death among the population.
+
+The reason for making past memory become less important throughout time, is to avoid forming stereotype on leading strategies and to preserve diversity, accounting the possibility where one particular leading strategy might not be suitable at one time, but might be suitable for another time.
+
+\subsection{Leader trust estimation}
+Since it's not possible to get event feedback for how an agent is going to lead unless this agent is elected to be the leader, which tend to be infrequent, so we designed an estimation for the leader trust combining an agent's normal performance and it's performance when it did act as the leader.
+\begin{center}
+$T_{lead}^{t+1} = \alpha \cdot T_{lead}^t + \beta \cdot T_{normal}^t$    
+\end{center}
+So in fact each agent need to keep two trust record for other agents, $T_{normal}$ for whether an agent is doing well on an individual level, and $T_{lead}$ for whether an agent is doing well on a group level. They are then combined to produce a estimation on how trust worthy an agent is to become the new leader, typically in a ratio of $\alpha=0.9, \beta=0.1$ for making past leading experience more significant.
 
 \section{Trading Logic}
 
@@ -205,3 +249,36 @@ Some results are shown below, execution time is labelled with consumer in units 
 \end{figure}
 
 All trials had execution time under 0.01 seconds and well below the time limit.
+
+\subsection{Team 5 vs. Random}
+Figure \ref{fig:Team5vsRandom} is a comparison between our team's agent vs. the random agent. With two small tweaks are done to the game engine in order to make the comparison under the same controls.
+
+\begin{enumerate}
+    \item Turned off HP pool donation: \\
+    The current HP pool donation mechanism is way unbalanced and will become a dominated strategy if used, which causes agents to be able to skip all levels until they can't donate health anymore, this prevents all designs on fighting decision or leader function to be relevant.
+    \item Stamina regeneration increased: \\
+    As on the demo section, the unbalance stamina regeneration is mentioned, where after examining, the original game only regenerate 1 stamina ($0.05\%$ to initial health) per time, so for a more sensible game run, the stamina regeneration is changed to 100 ($5\%$ to initial health) per time.
+\end{enumerate}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{008_team_5_agent_design/images/Team5vsRandom.png}
+    \caption{Game run with 100 Team 5 agents (red); 100 Random agents (blue); 50 Team 5 agents and 50 Random agents (yellow).}
+    \label{fig:Team5vsRandom}
+\end{figure}
+
+In average our agent could survive 5 more levels then the random agent, with it's own kind. But when playing with half of the population being another kind, the levels survived will only be marginally better than the random agents. This might because the random agents do not keep trust record (no social capital), so the advantage of using social capital to effectively elect leader or appropriating loot is broken.
+
+\subsection{Proposal, trust and knowledge aggregation}
+It will be interesting to investigate the effect of allowing agents to propose what they think is the best, also how that might effect leading and whether it helps to do knowledge aggregation.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{008_team_5_agent_design/images/knowledgeAgg.png}
+    \caption{Comparisons of allowing agent proposal or not. Top: agent's trust to the current leader through levels; Bottom: ratio of population knowledge to individual knowledge through levels.}
+    \label{fig:knowledgeAgg}
+\end{figure}
+
+For the top part of figure \ref{fig:knowledgeAgg}, we compared how proposal affects leading. Notice that without self-experience proposal, an agent's trust toward the current leader oscillates much frequently. This could infer more repeat leader change, also could be seen as an evidence for higher dependency on the leader.
+
+For the bottom part of figure \ref{fig:knowledgeAgg}, we compared how proposal affects change of the population to individual knowledge ratio. In both cases, the ratio generally increases through the early part of the game, indicating the population knowledge base is growing in a much faster rate than each individual's, but start to drop at mid-game and finally converges. The one with proposal has more variations on how the ratio changes, resulting in more dense spaces between curves. This could reflect that the agents are trying to gain extract knowledge by accepting proposals from others.
